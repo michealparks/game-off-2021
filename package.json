@@ -2,9 +2,9 @@
   "name": "game-off-2021",
   "version": "0.0.0",
   "scripts": {
-    "start": "vite",
+    "start": "vite --host",
     "build": "tsc && vite build",
-    "serve": "vite preview"
+    "serve": "vite preview --host"
   },
   "dependencies": {
     "@react-three/fiber": "^7.0.19",

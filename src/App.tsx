@@ -1,4 +1,3 @@
-import './App.css'
 import * as THREE from 'three'
 import React, { useRef, useState } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
@@ -29,8 +28,8 @@ function Box(props: JSX.IntrinsicElements['mesh']) {
 
 function App() {
   return (
-    <div className="App">
-      <Canvas>
+    <div className='h-screen w-screen'>
+      <Canvas mode='concurrent' dpr={Math.min(2, window.devicePixelRatio)}>
         <ambientLight />
         <pointLight position={[10, 10, 10]} />
         <Box position={[-1.2, 0, 0]} />

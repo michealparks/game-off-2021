@@ -6,6 +6,9 @@
     "build": "vite build",
     "serve": "vite preview --host"
   },
+  "engines": {
+    "node": ">=16.0.0"
+  },
   "dependencies": {
     "@drecom/stats.js": "^1.0.0",
     "@react-spring/three": "^9.3.0",

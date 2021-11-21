@@ -1,4 +1,5 @@
 import { interpret, createMachine, assign } from 'xstate'
+import { UNIT } from './constants'
 
 export type Module = 'cpu' | 'gpu' | 'ram' | 'ssd' | 'psu'
 
@@ -163,14 +164,11 @@ export const gameMachine = createMachine<Context, Events>(
       buildUnit: assign((ctx, event) => {
         if (event.type !== 'BUILD_UNIT') return {}
 
-        console.log(event.unit, {
-          energy: ctx.energy - 5,
-          [event.unit]: ctx[event.unit] + 1,
-        })
+        const { unit } = event
 
         return {
-          energy: ctx.energy - 5,
-          [event.unit]: ctx[event.unit] + 1,
+          energy: ctx.energy - UNIT[unit].cost,
+          [unit]: ctx[unit] + 1,
         }
       })
     },

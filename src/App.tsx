@@ -1,28 +1,16 @@
 import * as THREE from 'three'
-import React, { useEffect } from 'react'
-import { Canvas, useFrame } from '@react-three/fiber'
+import React from 'react'
+import { Canvas } from '@react-three/fiber'
 import { EffectComposer, Bloom, Noise, Vignette } from '@react-three/postprocessing'
 import { OrbitControls } from '@react-three/drei'
 import { useStats } from './hooks/useStats'
 import Interface from './interface'
 import Model from './models/computer'
-import { useGame } from './hooks/game'
 
 const App = () => {
-  useStats()
-
-  const [, send] = useGame()
-
-  useEffect(() => {
-    send({
-      type: 'START',
-      resources: {
-        energy: 100,
-        harvester: 5,
-        soldier: 5,
-      }
-    })
-  }, [])
+  if (import.meta.env.DEV) {
+    useStats()
+  }
 
   return (
     <div className='h-screen w-screen'>
@@ -35,7 +23,8 @@ const App = () => {
         <ambientLight />
         <pointLight position={[10, 10, 10]} />
 
-        <OrbitControls enablePan={true} enableZoom={true} enableRotate={true} />
+        <OrbitControls enablePan={false} enableZoom={false} enableRotate={true} />
+      
         <Model />
 
         <EffectComposer>

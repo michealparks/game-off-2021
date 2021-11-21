@@ -20,7 +20,13 @@ const Interface = ({ name, harvesters, soldiers, onClose }: Props) => {
       <p>{name}</p>
       <p>Harvesters: {harvesters}</p>
       <p>Solidiers: {soldiers}</p>
-      <button type='button' className='border rounded border-white px-2 py-1' onClick={onClose}>Done</button>
+      <button
+        type='button'
+        className='border rounded border-white px-2 py-1'
+        onClick={onClose}
+      >
+        Done
+      </button>
     </Html>
   )
 }

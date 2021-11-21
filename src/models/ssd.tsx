@@ -7,27 +7,20 @@ import { GLTFResult } from './constants'
 
 const SSD = () => {
   const [state, send] = useGame()
-  const { viewedModule, allocations } = state.context
-  const active = viewedModule === 'ssd'
+  const active = state.context.viewedModule === 'ssd'
   const { nodes } = useGLTF(COMPUTER_URL) as GLTFResult
-  const [{ z }] = useSpring({ z: viewedModule === 'ssd' ? translateZ + 0.02 : 0.02, config }, [viewedModule])
-  const toggle = () => send({ type: 'VIEW_MODULE', module: active ? null : 'ssd' })
-
+  const [{ z }] = useSpring({ z: active ? translateZ + 0.02 : 0.02, config }, [active])
+  
   return (
     <a.mesh
-      onClick={toggle}
+      onClick={() => send({ type: 'VIEW_MODULE', module: active ? null : 'ssd' })}
       geometry={nodes.ssd.geometry}
       material={nodes.ssd.material}
       position-x={0}
       position-y={0.06}
       position-z={z}
     >
-      {active && <Interface
-        name='ssd'
-        harvesters={allocations.harvester.ssd}
-        soldiers={allocations.soldier.ssd}
-        onClose={toggle}
-      />}
+      {active && <Interface name='ssd' />}
     </a.mesh>
   )
 }

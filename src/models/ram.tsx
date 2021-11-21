@@ -7,27 +7,20 @@ import { GLTFResult } from './constants'
 
 const RAM = () => {
   const [state, send] = useGame()
-  const { viewedModule, allocations } = state.context
-  const active = viewedModule === 'ram'
+  const active = state.context.viewedModule === 'ram'
   const { nodes, materials } = useGLTF(COMPUTER_URL) as GLTFResult
-  const [{ z }] = useSpring({ z: viewedModule === 'ram' ? translateZ + 0.04 : 0.04, config }, [viewedModule])
-  const toggle = () => send({ type: 'VIEW_MODULE', module: active ? null : 'ram' })
+  const [{ z }] = useSpring({ z: active ? translateZ + 0.04 : 0.04, config }, [active])
 
   return (
     <a.mesh
-      onClick={toggle}
+      onClick={() => send({ type: 'VIEW_MODULE', module: active ? null : 'ram' })}
       geometry={nodes.ram.geometry}
       material={materials.red}
       position-x={0.07}
       position-y={0.01}
       position-z={z}
     >
-      {active && <Interface
-        name='ram'
-        harvesters={allocations.harvester.ram}
-        soldiers={allocations.soldier.ram}
-        onClose={toggle}
-      />}
+      {active && <Interface name='ram' />}
     </a.mesh>
   )
 }

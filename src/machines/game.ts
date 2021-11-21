@@ -35,11 +35,6 @@ interface Context extends Resources, GameState {
   energy: number
 }
 
-interface Allocation {
-  type: Unit
-  amount: number
-  module: Module
-}
 
 type Events =
   | { type: 'START'; resources: Resources }
@@ -49,8 +44,9 @@ type Events =
   | { type: 'RESET' }
   | { type: 'VIEW_MODULE'; module: null | Module }
   | { type: 'BUILD_UNIT'; unit: Unit }
-  | { type: 'ALLOCATE_UNITS'; allocation: Allocation }
-  | { type: 'KILL_UNITS'; allocation: Allocation }
+  | { type: 'ALLOCATE_UNIT'; unit: Unit; part: Module }
+  | { type: 'RECALL_UNIT'; unit: Unit; part: Module }
+  | { type: 'KILL_UNIT'; unit: Unit; part: Module }
 
 export const gameMachine = createMachine<Context, Events>(
   {
@@ -90,14 +86,22 @@ export const gameMachine = createMachine<Context, Events>(
           BUILD_UNIT: {
             target: 'running',
             actions: 'buildUnit',
+            cond: 'hasEnergyForUnit',
           },
-          ALLOCATE_UNITS: {
+          ALLOCATE_UNIT: {
             target: 'running',
-            actions: 'setAllocatedUnits',
+            actions: 'allocateUnit',
+            cond: 'hasUnit',
           },
-          KILL_UNITS: {
+          RECALL_UNIT: {
             target: 'running',
-            actions: 'setAllocatedUnits',
+            actions: 'recallUnit',
+            cond: 'hasAllocatedUnits',
+          },
+          KILL_UNIT: {
+            target: 'running',
+            actions: 'killUnit',
+            cond: 'hasAllocatedUnits',
           },
         },
       },
@@ -117,25 +121,58 @@ export const gameMachine = createMachine<Context, Events>(
     },
   },
   {
+    guards: {
+      hasUnit: (ctx, event) => event.type === 'ALLOCATE_UNIT' && ctx[event.unit] > 0,
+      hasEnergyForUnit: (ctx, event) => event.type === 'BUILD_UNIT' && ctx.energy >= UNIT[event.unit].cost,
+      hasAllocatedUnits: (ctx, event) => (event.type === 'KILL_UNIT' || event.type === 'RECALL_UNIT') && ctx.allocations[event.unit][event.part] >= 1
+    },
     actions: {
       setResources: assign((_ctx, event) => {
         if (event.type !== 'START') return {}
 
         return event.resources
       }),
-      setAllocatedUnits: assign((ctx, event) => {
-        if (event.type === 'ALLOCATE_UNITS') {
-          const { allocation } = event
-          ctx.allocations[allocation.type][allocation.module] += allocation.amount
-          return ctx.allocations
-        }
+      buildUnit: assign((ctx, event) => {
+        if (event.type !== 'BUILD_UNIT') return {}
 
-        if (event.type === 'KILL_UNITS') {
-          const { allocation } = event
-          ctx.allocations[allocation.type][allocation.module] -= allocation.amount
-        }
+        const { unit } = event
 
-        return {}
+        return {
+          energy: ctx.energy - UNIT[unit].cost,
+          [unit]: ctx[unit] + 1,
+        }
+      }),
+      allocateUnit: assign((ctx, event) => {
+        if (event.type !== 'ALLOCATE_UNIT') return {}
+
+        const { unit, part } = event
+        const allocations = JSON.parse(JSON.stringify(ctx.allocations))
+        allocations[unit][part] += 1
+
+        return {
+          [unit]: ctx[unit] - 1,
+          allocations,
+        }
+      }),
+      recallUnit: assign((ctx, event) => {
+        if (event.type !== 'RECALL_UNIT') return {}
+
+        const { unit, part } = event
+        const allocations = JSON.parse(JSON.stringify(ctx.allocations))
+        allocations[unit][part] -= 1
+
+        return {
+          [unit]: ctx[unit] + 1,
+          allocations,
+        }
+      }),
+      killUnit: assign((ctx, event) => {
+        if (event.type !== 'KILL_UNIT') return {}
+
+        const allocations = JSON.parse(JSON.stringify(ctx.allocations))
+        allocations[event.unit][event.part] -= 1
+
+        return { allocations }
       }),
       setViewedModule: assign((_ctx, event) => {
         if (event.type !== 'VIEW_MODULE') return {}
@@ -161,16 +198,6 @@ export const gameMachine = createMachine<Context, Events>(
 
         return event.context
       }),
-      buildUnit: assign((ctx, event) => {
-        if (event.type !== 'BUILD_UNIT') return {}
-
-        const { unit } = event
-
-        return {
-          energy: ctx.energy - UNIT[unit].cost,
-          [unit]: ctx[unit] + 1,
-        }
-      })
     },
   }
 )

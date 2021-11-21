@@ -7,27 +7,20 @@ import Interface from './interface'
 
 const CPU = () => {
   const [state, send] = useGame()
-  const { viewedModule, allocations } = state.context
-  const active = viewedModule === 'cpu'
+  const active = state.context.viewedModule === 'cpu'
   const { nodes, materials } = useGLTF(COMPUTER_URL) as GLTFResult
-  const [{ z }] = useSpring({ z: active ? translateZ + 0.02 : 0.02, config }, [viewedModule])
-  const toggle = () => send({ type: 'VIEW_MODULE', module: active ? null : 'cpu' })
+  const [{ z }] = useSpring({ z: active ? translateZ + 0.02 : 0.02, config }, [active])
 
   return (
     <a.mesh
-      onClick={toggle}
+      onClick={() => send({ type: 'VIEW_MODULE', module: active ? null : 'cpu' })}
       geometry={nodes.cpu.geometry}
       material={materials.sand}
       position-x={0}
       position-y={0}
       position-z={z}
     >
-      {active && <Interface
-        name='cpu'
-        harvesters={allocations.harvester.cpu}
-        soldiers={allocations.soldier.cpu}
-        onClose={toggle}
-      />}
+      {active && <Interface name='cpu' />}
     </a.mesh>
   )
 }

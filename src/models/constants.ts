@@ -21,4 +21,7 @@ export type GLTFResult = GLTF & {
 }
 
 export const translateZ = 0.1
+
 export const config = { mass: 1, tension: 1000, friction: 25, precision: 0.0001 }
+
+export const COMPUTER_URL = new URL('../assets/computer.glb', import.meta.url).href

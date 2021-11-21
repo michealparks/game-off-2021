@@ -1,13 +1,15 @@
 import React from 'react'
 import { useGLTF } from '@react-three/drei'
-import { GLTFResult } from './constants'
+import { COMPUTER_URL, GLTFResult } from './constants'
 import GPU from './gpu'
 import CPU from './cpu'
 import RAM from './ram'
 import SSD from './ssd'
 
+useGLTF.preload(COMPUTER_URL)
+
 const Model = ({ ...props }: JSX.IntrinsicElements['group']) => {
-  const { nodes, materials } = useGLTF('./static/computer.glb') as GLTFResult
+  const { nodes, materials } = useGLTF(COMPUTER_URL) as GLTFResult
 
   return (
     <group {...props} dispose={null}>
@@ -36,7 +38,5 @@ const Model = ({ ...props }: JSX.IntrinsicElements['group']) => {
     </group>
   )
 }
-
-useGLTF.preload('./static/computer.glb')
 
 export default Model

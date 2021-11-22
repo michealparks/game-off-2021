@@ -3,20 +3,34 @@ import { GLTF } from 'three-stdlib'
 export type GLTFResult = GLTF & {
   nodes: {
     motherboard: THREE.Mesh
-    gpu: THREE.Mesh
+    Cube002: THREE.Mesh
+    Cube002_1: THREE.Mesh
+    Cube002_2: THREE.Mesh
     io: THREE.Mesh
-    ['motherboard-gpu-io']: THREE.Mesh
-    ['motherboard-cpu-io']: THREE.Mesh
-    ram: THREE.Mesh
-    cpu: THREE.Mesh
+    motherboard_gpu_io: THREE.Mesh
+    motherboard_cpu_io: THREE.Mesh
+    Cube009: THREE.Mesh
+    Cube009_1: THREE.Mesh
+    Cube009_2: THREE.Mesh
+    Cube011: THREE.Mesh
+    Cube011_1: THREE.Mesh
     ssd: THREE.Mesh
+    cpu: THREE.Mesh
+    ram_io: THREE.Mesh
+    gpu_fan: THREE.Mesh
+    cpu_fan: THREE.Mesh
+    psu: THREE.Mesh
   }
   materials: {
     green: THREE.MeshStandardMaterial
     blue: THREE.MeshStandardMaterial
+    metal: THREE.MeshStandardMaterial
+    gold: THREE.MeshStandardMaterial
     white: THREE.MeshStandardMaterial
     red: THREE.MeshStandardMaterial
     sand: THREE.MeshStandardMaterial
+    light_metal: THREE.MeshStandardMaterial
+    brown: THREE.MeshStandardMaterial
   }
 }
 

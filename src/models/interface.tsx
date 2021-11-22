@@ -25,13 +25,13 @@ const Interface = ({ name }: Props) => {
   return (
     <Html
       as='div'
-      distanceFactor={0.25}
-      zIndexRange={[100, 0]}
-      transform
+      distanceFactor={0.5}
+      zIndexRange={[1000, 0]}
       sprite
-      className='text-white bg-gray-800 text-xs p-2 select-none'
+      className='text-white bg-gray-800 text-xs p-2 select-none min-w-[10rem] rounded-md'
     >
       <p>{name}</p>
+
       <p>
         Harvesters: {harvester[name]}
         <Button
@@ -43,6 +43,7 @@ const Interface = ({ name }: Props) => {
           onClick={() => send({ type: 'RECALL_UNIT', unit: 'harvester', part: name })}
         />
       </p>
+
       <p>
         Soldiers: {soldier[name]}
         <Button

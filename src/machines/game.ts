@@ -6,6 +6,8 @@ export type Module = 'cpu' | 'gpu' | 'ram' | 'ssd' | 'psu'
 type Unit = 'harvester' | 'soldier'
 
 interface GameState {
+  elapsed: number
+  tickInterval: number
   viewedModule: null | Module
   allocations: {
     harvester: {
@@ -31,10 +33,7 @@ interface Resources {
   soldier: number
 }
 
-interface Context extends Resources, GameState {
-  energy: number
-}
-
+interface Context extends Resources, GameState {}
 
 type Events =
   | { type: 'START'; resources: Resources }
@@ -42,6 +41,7 @@ type Events =
   | { type: 'PAUSE' }
   | { type: 'END_GAME' }
   | { type: 'RESET' }
+  | { type: 'TICK' }
   | { type: 'VIEW_MODULE'; module: null | Module }
   | { type: 'BUILD_UNIT'; unit: Unit }
   | { type: 'ALLOCATE_UNIT'; unit: Unit; part: Module }
@@ -53,6 +53,8 @@ export const gameMachine = createMachine<Context, Events>(
     id: 'game',
     initial: 'idle',
     context: {
+      elapsed: 0,
+      tickInterval: 1.0,
       energy: 0,
       harvester: 0,
       soldier: 0,
@@ -76,30 +78,31 @@ export const gameMachine = createMachine<Context, Events>(
         },
       },
       running: {
+        invoke: {
+          src: 'spawnTick',
+        },
         on: {
           PAUSE: 'paused',
           END_GAME: 'ended',
+          TICK: {
+            actions: 'processGame',
+          },
           VIEW_MODULE: {
-            target: 'running',
             actions: 'setViewedModule',
           },
           BUILD_UNIT: {
-            target: 'running',
             actions: 'buildUnit',
             cond: 'hasEnergyForUnit',
           },
           ALLOCATE_UNIT: {
-            target: 'running',
             actions: 'allocateUnit',
             cond: 'hasUnit',
           },
           RECALL_UNIT: {
-            target: 'running',
             actions: 'recallUnit',
             cond: 'hasAllocatedUnits',
           },
           KILL_UNIT: {
-            target: 'running',
             actions: 'killUnit',
             cond: 'hasAllocatedUnits',
           },
@@ -122,9 +125,22 @@ export const gameMachine = createMachine<Context, Events>(
   },
   {
     guards: {
-      hasUnit: (ctx, event) => event.type === 'ALLOCATE_UNIT' && ctx[event.unit] > 0,
-      hasEnergyForUnit: (ctx, event) => event.type === 'BUILD_UNIT' && ctx.energy >= UNIT[event.unit].cost,
-      hasAllocatedUnits: (ctx, event) => (event.type === 'KILL_UNIT' || event.type === 'RECALL_UNIT') && ctx.allocations[event.unit][event.part] >= 1
+      hasUnit: (ctx, event) => (
+        event.type === 'ALLOCATE_UNIT' && ctx[event.unit] > 0
+      ),
+      hasEnergyForUnit: (ctx, event) => (
+        event.type === 'BUILD_UNIT' && ctx.energy >= UNIT[event.unit].cost
+      ),
+      hasAllocatedUnits: (ctx, event) => (
+        (event.type === 'KILL_UNIT' || event.type === 'RECALL_UNIT') && ctx.allocations[event.unit][event.part] >= 1
+      ),
+    },
+    services: {
+      spawnTick: ({ tickInterval }) => (cb) => {
+        const interval = setInterval(() => cb('TICK'), 1000 * tickInterval)
+
+        return () => clearInterval(interval)
+      },
     },
     actions: {
       setResources: assign((_ctx, event) => {
@@ -132,6 +148,7 @@ export const gameMachine = createMachine<Context, Events>(
 
         return event.resources
       }),
+
       buildUnit: assign((ctx, event) => {
         if (event.type !== 'BUILD_UNIT') return {}
 
@@ -142,6 +159,7 @@ export const gameMachine = createMachine<Context, Events>(
           [unit]: ctx[unit] + 1,
         }
       }),
+
       allocateUnit: assign((ctx, event) => {
         if (event.type !== 'ALLOCATE_UNIT') return {}
 
@@ -154,6 +172,7 @@ export const gameMachine = createMachine<Context, Events>(
           allocations,
         }
       }),
+
       recallUnit: assign((ctx, event) => {
         if (event.type !== 'RECALL_UNIT') return {}
 
@@ -166,6 +185,7 @@ export const gameMachine = createMachine<Context, Events>(
           allocations,
         }
       }),
+
       killUnit: assign((ctx, event) => {
         if (event.type !== 'KILL_UNIT') return {}
 
@@ -174,11 +194,19 @@ export const gameMachine = createMachine<Context, Events>(
 
         return { allocations }
       }),
+
+      processGame: assign((ctx, event) => {
+        return {
+          elapsed: ctx.elapsed + ctx.tickInterval
+        }
+      }),
+
       setViewedModule: assign((_ctx, event) => {
         if (event.type !== 'VIEW_MODULE') return {}
 
         return { viewedModule: event.module }
       }),
+
       resetContext: assign((_ctx, event) => {
         if (event.type !== 'END_GAME') return {}
 
@@ -193,6 +221,7 @@ export const gameMachine = createMachine<Context, Events>(
           }
         }
       }),
+
       setContext: assign((_ctx, event) => {
         if (event.type !== 'RESUME') return {}
 

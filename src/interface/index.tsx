@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { useActor } from '@xstate/react'
 import { game } from '../machines/game'
 import Button from './button'
@@ -25,6 +25,7 @@ const Interface = () => {
       {state.matches('ended') && <p>Ended</p>}
 
       <div className='p-2'>
+        <p>Elapsed: {state.context.elapsed}</p>
         <h4>Resources</h4>
         <p>Energy: {energy}</p>
         <p>Harvesters: {harvester}</p>
@@ -48,7 +49,6 @@ const Interface = () => {
           onClick={() => send({ type: 'BUILD_UNIT', unit: 'soldier'})}
           label='Build soldier (-10)'
         />
-
       </div>
 
       {state.matches('paused') && (

@@ -5,27 +5,28 @@ import { COMPUTER_URL, config, translateZ } from './constants'
 import Interface from './interface'
 import { GLTFResult } from './constants'
 
-const SSD = () => {
+const PSU = () => {
   const [state, send] = useGame()
-  const active = state.context.viewedModule === 'ssd'
+  const active = state.context.viewedModule === 'psu'
   const { nodes } = useGLTF(COMPUTER_URL) as GLTFResult
-  const [{ z }] = useSpring({ z: active ? translateZ + 0.016 : 0.016, config }, [active])
+  const [{ z }] = useSpring({ z: active ? translateZ + 0.04 : 0.04, config }, [active])
 
   return (
     <a.mesh
+      name='psu'
       onClick={(e) => {
         e.stopPropagation()
-        send({ type: 'VIEW_MODULE', module: active ? null : 'ssd' })
+        send({ type: 'VIEW_MODULE', module: active ? null : 'psu' })
       }}
-      geometry={nodes.ssd.geometry}
-      material={nodes.ssd.material}
-      position-x={0}
-      position-y={0.062}
+      geometry={nodes.psu.geometry}
+      material={nodes.psu.material}
+      position-x={0.002}
+      position-y={0.159}
       position-z={z}
     >
-      {active && <Interface name='ssd' />}
+      {active && <Interface name='psu' />}
     </a.mesh>
   )
 }
 
-export default SSD
+export default PSU

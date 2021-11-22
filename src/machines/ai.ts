@@ -1,4 +1,4 @@
-import { interpret, createMachine, assign } from 'xstate'
+import { createMachine } from 'xstate'
 
 interface Context {}
 

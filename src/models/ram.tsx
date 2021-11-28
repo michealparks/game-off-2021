@@ -10,8 +10,6 @@ import vertShader from '../shaders/ram.vert.glsl'
 import fragShader from '../shaders/ram.frag.glsl'
 import { useRef } from 'react'
 
-console.log(vertShader)
-
 const RamMaterial = shaderMaterial(
   { time: 0 },
   vertShader,
@@ -19,6 +17,10 @@ const RamMaterial = shaderMaterial(
 )
 
 extend({ RamMaterial })
+
+const description = `
+More control results in faster cooldowns when assigning units.
+`
 
 const RAM = () => {
   const [state, send] = useGame()
@@ -45,7 +47,7 @@ const RAM = () => {
       <mesh geometry={nodes.Cube009_2.geometry} material={materials.red}>
         <ramMaterial ref={matRef} attach="material" color="hotpink" />
       </mesh>
-      {active && <Interface name='ram' />}
+      {active && <Interface name='ram' description={description} />}
     </a.group>
   )
 }

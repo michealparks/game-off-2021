@@ -5,6 +5,10 @@ import { COMPUTER_URL, config, translateZ } from './constants'
 import Interface from './interface'
 import { GLTFResult } from './constants'
 
+const description = `
+More control allows additional units to be built.
+`
+
 const SSD = () => {
   const [state, send] = useGame()
   const active = state.context.viewedModule === 'ssd'
@@ -23,7 +27,7 @@ const SSD = () => {
       position-y={0.062}
       position-z={z}
     >
-      {active && <Interface name='ssd' />}
+      {active && <Interface name='ssd' description={description} />}
     </a.mesh>
   )
 }

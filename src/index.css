@@ -4,4 +4,21 @@
 
 body {
   @apply overflow-hidden;
+  font-family: 'Exo 2', system-ui;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Audiowide', system-ui;
+}
+
+@layer utilities {
+  .select-none {
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  .backdrop-filter {
+    backdrop-filter: var(--tw-backdrop-filter);
+    -webkit-backdrop-filter: var(--tw-backdrop-filter);
+  }
 }

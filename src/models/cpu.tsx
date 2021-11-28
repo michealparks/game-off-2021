@@ -1,11 +1,16 @@
-import { useGame } from '../hooks/game'
+import { useRef } from 'react'
 import { useGLTF } from '@react-three/drei'
+import { useFrame } from '@react-three/fiber'
 import { useSpring, a } from '@react-spring/three'
+import { useGame } from '../hooks/game'
 import { COMPUTER_URL, config, translateZ } from './constants'
 import { GLTFResult } from './constants'
 import Interface from './interface'
-import { useFrame } from '@react-three/fiber'
-import { useRef } from 'react'
+import { player } from '../machines/player'
+
+const description = `
+More control speeds up the game clock for the virus only.
+`
 
 const CPU = () => {
   const [state, send] = useGame()
@@ -16,7 +21,7 @@ const CPU = () => {
 
   const fan = useRef<THREE.Mesh>(null!)
 
-  useFrame(() => { fan.current.rotation.z += 0.1 })
+  useFrame(() => { fan.current.rotation.z += (0.01 + (1 / player.state.context.interval * 0.01)) })
 
   return (
     <>
@@ -41,7 +46,7 @@ const CPU = () => {
         <mesh geometry={nodes.Cube011.geometry} material={nodes.Cube011.material} />
         <mesh geometry={nodes.Cube011_1.geometry} material={materials.sand} />
         <mesh name='cpu-fan' ref={fan} geometry={nodes.cpu_fan.geometry} material={materials.brown} position={[0, 0, 0.01]} />
-        {active && <Interface name='cpu' />}
+        {active && <Interface name='cpu' description={description} />}
       </a.group>
     </>
   )

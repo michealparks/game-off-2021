@@ -5,6 +5,10 @@ import { COMPUTER_URL, config, translateZ } from './constants'
 import Interface from './interface'
 import { GLTFResult } from './constants'
 
+const description = `
+More control causes additional energy to be redistributed to the virus.
+`
+
 const PSU = () => {
   const [state, send] = useGame()
   const active = state.context.viewedModule === 'psu'
@@ -24,7 +28,7 @@ const PSU = () => {
       position-y={0.159}
       position-z={z}
     >
-      {active && <Interface name='psu' />}
+      {active && <Interface name='psu' description={description} />}
     </a.mesh>
   )
 }

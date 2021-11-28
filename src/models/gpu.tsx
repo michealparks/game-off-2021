@@ -1,11 +1,16 @@
 import { useRef } from 'react'
 import { useGLTF } from '@react-three/drei'
+import { useFrame } from '@react-three/fiber'
 import { useSpring, a } from '@react-spring/three'
 import { useGame } from '../hooks/game'
 import { COMPUTER_URL, config, translateZ } from './constants'
 import { GLTFResult } from './constants'
 import Interface from './interface'
-import { useFrame } from '@react-three/fiber'
+import { player } from '../machines/player'
+
+const description = `
+More control creates a greater chance every clock tick that a random unit will be generated.
+`
 
 const GPU = () => {
   const startZ = 0.061
@@ -16,7 +21,7 @@ const GPU = () => {
 
   const fan = useRef<THREE.Mesh>(null!)
 
-  useFrame(() => { fan.current.rotation.y += 0.1 })
+  useFrame(() => { fan.current.rotation.y += 0.01 + (1 / player.state.context.interval) })
 
   return (
     <a.group
@@ -33,7 +38,7 @@ const GPU = () => {
       <mesh geometry={nodes.Cube002_1.geometry} material={nodes.Cube002_1.material} />
       <mesh geometry={nodes.Cube002_2.geometry} material={nodes.Cube002_2.material} />
       <mesh name='gpu-fan' ref={fan} geometry={nodes.gpu_fan.geometry} material={materials.light_metal} position={[0.07, 0.015, 0.001]} />
-      {active && <Interface name='gpu' />}
+      {active && <Interface name='gpu' description={description} />}
     </a.group>
   )
 }

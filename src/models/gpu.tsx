@@ -26,7 +26,6 @@ const GPU = () => {
   return (
     <a.group
       name='gpu'
-      castShadow
       onClick={(e) => {
         e.stopPropagation()
         send({ type: 'VIEW_MODULE', module: active ? null : 'gpu' })
@@ -35,10 +34,10 @@ const GPU = () => {
       position-y={-0.076}
       position-z={z}
     >
-      <mesh geometry={nodes.Cube002.geometry} material={nodes.Cube002.material} />
-      <mesh geometry={nodes.Cube002_1.geometry} material={nodes.Cube002_1.material} />
-      <mesh geometry={nodes.Cube002_2.geometry} material={nodes.Cube002_2.material} />
-      <mesh name='gpu-fan' ref={fan} geometry={nodes.gpu_fan.geometry} material={materials.light_metal} position={[0.07, 0.015, 0.001]} />
+      <mesh castShadow geometry={nodes.Cube002.geometry} material={nodes.Cube002.material} />
+      <mesh castShadow geometry={nodes.Cube002_1.geometry} material={nodes.Cube002_1.material} />
+      <mesh castShadow geometry={nodes.Cube002_2.geometry} material={nodes.Cube002_2.material} />
+      <mesh castShadow name='gpu-fan' ref={fan} geometry={nodes.gpu_fan.geometry} material={materials.light_metal} position={[0.0675, 0.015, 0.001]} />
       {active && <Interface name='gpu' description={description} />}
     </a.group>
   )

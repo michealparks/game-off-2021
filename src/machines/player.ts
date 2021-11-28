@@ -4,7 +4,10 @@ import { CONFIG, COST, Unit, Part, Resources } from './constants'
 
 interface Context {
   elapsed: number
-  elapsedCooldown: number
+  elapsedCooldown: {
+    harvester: number
+    soldier: number
+  }
   interval: number
   cooldown: number
   energy: number
@@ -22,13 +25,20 @@ type Events =
   | { type: 'SEND_UNIT'; unit: Unit; part: Part }
   | { type: 'RECALL_UNIT'; unit: Unit; part: Part }
 
+const formatFloat = (n: number): number => {
+  return Number.parseFloat(n.toFixed(2))
+}
+
 const machine = createMachine<Context, Events>(
   {
     id: 'player',
     initial: 'idle',
     context: {
       elapsed: 0,
-      elapsedCooldown: 0,
+      elapsedCooldown: {
+        harvester: 0,
+        soldier: 0,
+      },
       interval: 0,
       cooldown: 0,
       maxHarvester: 0,
@@ -110,14 +120,22 @@ const machine = createMachine<Context, Events>(
       process: assign((ctx, _event) => {
         const { cpu, gpu, ram, ssd, psu } = computer.state.context
 
+        const cpuWeight = -(cpu.harvester * CONFIG.cpuHarvesterLimiter)
+        const ramWeight = -(1 + ram.harvester / 2)
+        const psuWeight = (psu.harvester * CONFIG.psuHarvesterLimiter)
+        const ssdWeight = (ssd.harvester * CONFIG.ssdHarvesterBonus)
+
         return {
           elapsed: ctx.elapsed + 1,
-          elapsedCooldown: Math.max(0, ctx.elapsedCooldown - 1),
-          interval: Math.max(CONFIG.minInterval, CONFIG.interval - (cpu.harvester * CONFIG.cpuHarvesterLimiter)),
+          interval: Math.max(CONFIG.minInterval, CONFIG.interval + cpuWeight),
           cooldown: CONFIG.cooldown,
-          energy: Number.parseFloat((ctx.energy + (psu.harvester * CONFIG.psuHarvesterLimiter)).toFixed(2)),
-          maxHarvester: CONFIG.maxHarvester + (ssd.harvester * CONFIG.ssdHarvesterBonus),
-          maxSoldier: CONFIG.maxHarvester + (ssd.harvester * CONFIG.ssdHarvesterBonus),
+          energy: formatFloat(ctx.energy + psuWeight),
+          maxHarvester: CONFIG.maxHarvester + ssdWeight,
+          maxSoldier: CONFIG.maxHarvester + ssdWeight,
+          elapsedCooldown: {
+            harvester: Math.max(0, ctx.elapsedCooldown.harvester + ramWeight),
+            soldier: Math.max(0, ctx.elapsedCooldown.soldier + ramWeight),
+          },
         }
       }),
       changeSpeed: assign((ctx, event) => {
@@ -131,7 +149,7 @@ const machine = createMachine<Context, Events>(
         const { unit } = event
 
         return {
-          energy: ctx.energy - COST[unit],
+          energy: formatFloat(ctx.energy - COST[unit]),
           [unit]: ctx[unit] + 1,
         }
       }),
@@ -144,7 +162,10 @@ const machine = createMachine<Context, Events>(
 
         return {
           [unit]: ctx[unit] - 1,
-          elapsedCooldown: CONFIG.cooldown,
+          elapsedCooldown: {
+            ...ctx.elapsedCooldown,
+            [unit]: CONFIG.cooldown,
+          }
         }
       }),
       recallUnit: assign((ctx, event) => {
@@ -154,7 +175,13 @@ const machine = createMachine<Context, Events>(
 
         computer.send({ type: 'RECALL_UNIT', unit, part })
 
-        return { [unit]: ctx[unit] + 1 }
+        return {
+          [unit]: ctx[unit] + 1,
+          elapsedCooldown: {
+            ...ctx.elapsedCooldown,
+            [unit]: CONFIG.cooldown,
+          }
+        }
       }),
     }
   }

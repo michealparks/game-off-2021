@@ -22,8 +22,6 @@ const Button = ({ onClick, label, className }: { onClick(): void, label?: string
   )
 }
 
-let count = 0
-
 interface ButtonProps {
   unit: Unit
   part: Part
@@ -32,12 +30,12 @@ interface ButtonProps {
 const Buttons = ({ unit, part }: ButtonProps) => {
   const [state, send] = usePlayer()
   const { elapsedCooldown, cooldown } = state.context
-  const hasCooldown = elapsedCooldown > 0
+  const hasCooldown = elapsedCooldown[unit] > 0
 
   return (
     <div className='relative overflow-hidden border rounded border-white bg-opacity-50'>
       {hasCooldown && <div
-        style={{transform: `scale(${1 - (elapsedCooldown / cooldown)}, 1)`}}
+        style={{transform: `scale(${1 - (elapsedCooldown[unit] / cooldown)}, 1)`}}
         className='absolute w-full h-full bg-white origin-left transition-transform duration-300'
       />}
       <Button
@@ -60,8 +58,6 @@ const Interface = ({ name, description }: Props) => {
   const [, send] = useGame()
   const [computer] = useComputer()
   const { harvester, soldier } = computer.context[name]
-
-  console.log(count++)
 
   return (
     <Html

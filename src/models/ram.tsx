@@ -42,8 +42,8 @@ const RAM = () => {
       position-y={0.013}
       position-z={z}
     >
-      <mesh castShadow geometry={nodes.Cube009.geometry} material={nodes.Cube009.material} />
-      <mesh castShadow geometry={nodes.Cube009_1.geometry} material={nodes.Cube009_1.material} />
+      <mesh castShadow receiveShadow geometry={nodes.Cube009.geometry} material={nodes.Cube009.material} />
+      <mesh castShadow receiveShadow geometry={nodes.Cube009_1.geometry} material={nodes.Cube009_1.material} />
       <mesh castShadow geometry={nodes.Cube009_2.geometry} material={materials.red}>
         <ramMaterial ref={matRef} attach="material" color="hotpink" />
       </mesh>

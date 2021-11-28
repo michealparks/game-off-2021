@@ -36,7 +36,6 @@ const Model = ({ ...props }: JSX.IntrinsicElements['group']) => {
         position={[-0.044, -0.077, 0.009]}
       />
       <mesh
-        castShadow
         receiveShadow
         name="motherboard_cpu_io"
         geometry={nodes.motherboard_cpu_io.geometry}

@@ -19,6 +19,7 @@ const SSD = () => {
     <a.mesh
       name='ssd'
       castShadow
+      receiveShadow
       onClick={(e) => {
         e.stopPropagation()
         send({ type: 'VIEW_MODULE', module: active ? null : 'ssd' })

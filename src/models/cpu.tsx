@@ -27,6 +27,7 @@ const CPU = () => {
     <>
       <a.mesh
         castShadow
+        receiveShadow
         name='cpu'
         geometry={nodes.cpu.geometry}
         material={nodes.cpu.material}
@@ -44,9 +45,24 @@ const CPU = () => {
         position-y={0}
         position-z={z}
       >
-        <mesh geometry={nodes.Cube011.geometry} material={nodes.Cube011.material} />
-        <mesh geometry={nodes.Cube011_1.geometry} material={materials.sand} />
-        <mesh name='cpu-fan' ref={fan} geometry={nodes.cpu_fan.geometry} material={materials.brown} position={[0, 0, 0.01]} />
+        <mesh
+          castShadow
+          geometry={nodes.Cube011.geometry}
+          material={nodes.Cube011.material}
+        />
+        <mesh
+          castShadow
+          geometry={nodes.Cube011_1.geometry}
+          material={materials.sand}
+        />
+        <mesh
+          name='cpu-fan'
+          castShadow
+          ref={fan}
+          geometry={nodes.cpu_fan.geometry}
+          material={materials.brown}
+          position={[0, 0, 0.01]}
+        />
         {active && <Interface name='cpu' description={description} />}
       </a.group>
     </>

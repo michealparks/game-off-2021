@@ -7,10 +7,15 @@ import { COMPUTER_URL, config, translateZ } from './constants'
 import { GLTFResult } from './constants'
 import Interface from './interface'
 import { player } from '../machines/player'
+import { audio } from '../util/audio'
 
 const description = `
 Speeds up the game clock for the virus.
 `
+
+const handlePartClick = (part: string) => (e) => {
+
+}
 
 const CPU = () => {
   const [state, send] = useGame()
@@ -21,7 +26,9 @@ const CPU = () => {
 
   const fan = useRef<THREE.Mesh>(null!)
 
-  useFrame(() => { fan.current.rotation.z += (0.01 + (1 / player.state.context.interval * 0.01)) })
+  useFrame(() => {
+    fan.current.rotation.z += (0.01 + (1 / player.state.context.interval * 0.01))
+  })
 
   return (
     <>
@@ -39,7 +46,14 @@ const CPU = () => {
         name='cpu-cooler'
         onClick={(e) => {
           e.stopPropagation()
-          send({ type: 'VIEW_MODULE', module: active ? null : 'cpu' })
+          if (active) {
+            audio.play('attach')
+            send({ type: 'VIEW_MODULE', module: null })
+          } else {
+            audio.play('remove')
+            send({ type: 'VIEW_MODULE', module: 'cpu' })
+          }
+          
         }}
         position-x={0}
         position-y={0}
@@ -47,17 +61,20 @@ const CPU = () => {
       >
         <mesh
           castShadow
+          receiveShadow
           geometry={nodes.Cube011.geometry}
           material={nodes.Cube011.material}
         />
         <mesh
           castShadow
+          receiveShadow
           geometry={nodes.Cube011_1.geometry}
           material={materials.sand}
         />
         <mesh
           name='cpu-fan'
           castShadow
+          receiveShadow
           ref={fan}
           geometry={nodes.cpu_fan.geometry}
           material={materials.brown}

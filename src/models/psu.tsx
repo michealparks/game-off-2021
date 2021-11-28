@@ -4,6 +4,7 @@ import { useGame } from '../hooks/game'
 import { COMPUTER_URL, config, translateZ } from './constants'
 import Interface from './interface'
 import { GLTFResult } from './constants'
+import { audio } from '../util/audio'
 
 const description = `
 Causes additional energy to be redistributed to the virus.
@@ -21,6 +22,7 @@ const PSU = () => {
       castShadow
       onClick={(e) => {
         e.stopPropagation()
+        audio.play(active ? 'attach' : 'remove')
         send({ type: 'VIEW_MODULE', module: active ? null : 'psu' })
       }}
       geometry={nodes.psu.geometry}

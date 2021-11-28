@@ -36,7 +36,7 @@ const Buttons = ({ unit, part }: ButtonProps) => {
     <div className='relative overflow-hidden border rounded border-white bg-opacity-50'>
       {hasCooldown && <div
         style={{transform: `scale(${1 - (elapsedCooldown[unit] / cooldown)}, 1)`}}
-        className='absolute w-full h-full bg-white origin-left transition-transform duration-300'
+        className='absolute w-full h-full bg-white origin-left transition-transform duration-500'
       />}
       <Button
         className={cn('icon-plus border-r border-white', {

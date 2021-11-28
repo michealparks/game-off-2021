@@ -9,6 +9,7 @@ import { GLTFResult } from './constants'
 import vertShader from '../shaders/ram.vert.glsl'
 import fragShader from '../shaders/ram.frag.glsl'
 import { useRef } from 'react'
+import { audio } from '../util/audio'
 
 const RamMaterial = shaderMaterial(
   { time: 0 },
@@ -36,6 +37,7 @@ const RAM = () => {
     <a.group
       onClick={(e) => {
         e.stopPropagation()
+        audio.play(active ? 'attach' : 'remove')
         send({ type: 'VIEW_MODULE', module: active ? null : 'ram' })
       }}
       position-x={0.068}

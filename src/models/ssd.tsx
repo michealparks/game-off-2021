@@ -4,6 +4,7 @@ import { useGame } from '../hooks/game'
 import { COMPUTER_URL, config, translateZ } from './constants'
 import Interface from './interface'
 import { GLTFResult } from './constants'
+import { audio } from '../util/audio'
 
 const description = `
 allows additional units to be built.
@@ -22,6 +23,7 @@ const SSD = () => {
       receiveShadow
       onClick={(e) => {
         e.stopPropagation()
+        audio.play(active ? 'attach' : 'remove')
         send({ type: 'VIEW_MODULE', module: active ? null : 'ssd' })
       }}
       geometry={nodes.ssd.geometry}

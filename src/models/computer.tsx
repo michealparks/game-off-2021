@@ -1,4 +1,4 @@
-import { useGLTF } from '@react-three/drei'
+import { useGLTF, Merged } from '@react-three/drei'
 import { COMPUTER_URL, GLTFResult } from './constants'
 import PSU from './psu'
 import GPU from './gpu'
@@ -11,45 +11,48 @@ useGLTF.preload(COMPUTER_URL)
 const Model = ({ ...props }: JSX.IntrinsicElements['group']) => {
   const { nodes, materials } = useGLTF(COMPUTER_URL) as GLTFResult
 
+  const meshes = [
+    nodes.motherboard,
+    nodes.io,
+    nodes.motherboard_gpu_io,
+    nodes.motherboard_cpu_io,
+    nodes.ram_io,
+  ]
+
   return (
     <group {...props} dispose={null}>
-      <mesh 
-        name="motherboard"
-        receiveShadow
-        geometry={nodes.motherboard.geometry}
-        material={materials.green}
-      />
-      <mesh
-        castShadow
-        receiveShadow
-        name="io"
-        geometry={nodes.io.geometry}
-        material={nodes.io.material}
-        position={[-0.092, 0.014, 0.032]}
-      />
-      <mesh
-        castShadow
-        receiveShadow
-        name="motherboard_gpu_io"
-        geometry={nodes.motherboard_gpu_io.geometry}
-        material={nodes.motherboard_gpu_io.material}
-        position={[-0.044, -0.077, 0.009]}
-      />
-      <mesh
-        receiveShadow
-        name="motherboard_cpu_io"
-        geometry={nodes.motherboard_cpu_io.geometry}
-        material={materials.white}
-        position={[0, 0, 0.005]}
-      />
-      <mesh
-        castShadow
-        receiveShadow
-        name="ram_io"
-        geometry={nodes.ram_io.geometry}
-        material={nodes.ram_io.material}
-        position={[0.078, 0.013, 0.008]}
-      />
+      <Merged castShadow receiveShadow meshes={meshes}>
+        {/* @ts-ignore */}
+        {(Motherboard, IO, GpuIO, CpuIO, RamIO) => (
+          <>
+            <Motherboard
+              name='motherboard'
+              material={materials.green}
+            />
+            <IO
+              name='io'
+              material={nodes.io.material}
+              position={[-0.092, 0.014, 0.032]}
+            />
+            <GpuIO
+              name='motherboard_gpu_io'
+              material={nodes.motherboard_gpu_io.material}
+              position={[-0.044, -0.077, 0.009]}
+            />
+            <CpuIO
+              name="motherboard_cpu_io"
+              material={materials.white}
+              position={[0, 0, 0.005]}
+            />
+            <RamIO
+              name='ram_io'
+              material={nodes.ram_io.material}
+              position={[0.078, 0.013, 0.008]}
+            />
+          </>
+        )}
+      </Merged>
+
       <PSU />
       <GPU />
       <RAM />

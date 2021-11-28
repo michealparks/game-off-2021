@@ -7,6 +7,10 @@ import Effects from './Effects'
 import Computer from './models/computer'
 import Lights from './Lights'
 import { Suspense } from 'react'
+import { audio } from './util/audio'
+
+audio.create('attach', new URL('./assets/attach.wav', import.meta.url).href)
+audio.create('remove', new URL('./assets/remove.wav', import.meta.url).href)
 
 const App = () => {
   if (import.meta.env.DEV) {
@@ -20,9 +24,9 @@ const App = () => {
           shadows
           mode='concurrent'
           performance={{ min: 0.7 }}
-          dpr={Math.min(2, window.devicePixelRatio)}
+          dpr={Math.min(1.5, window.devicePixelRatio)}
           gl={{ alpha: false, antialias: false }}
-          camera={{ position: new THREE.Vector3(-0.25, 0.25, 0.25) }}
+          camera={{ position: new THREE.Vector3(0.25, 0.15, 0.25) }}
         >
           <AdaptiveDpr pixelated />
           <AdaptiveEvents />

@@ -19,7 +19,7 @@ const RamMaterial = shaderMaterial(
 extend({ RamMaterial })
 
 const description = `
-More control results in faster cooldowns when assigning units.
+Results in faster cooldowns when assigning units.
 `
 
 const RAM = () => {
@@ -42,9 +42,9 @@ const RAM = () => {
       position-y={0.013}
       position-z={z}
     >
-      <mesh geometry={nodes.Cube009.geometry} material={nodes.Cube009.material} />
-      <mesh geometry={nodes.Cube009_1.geometry} material={nodes.Cube009_1.material} />
-      <mesh geometry={nodes.Cube009_2.geometry} material={materials.red}>
+      <mesh castShadow geometry={nodes.Cube009.geometry} material={nodes.Cube009.material} />
+      <mesh castShadow geometry={nodes.Cube009_1.geometry} material={nodes.Cube009_1.material} />
+      <mesh castShadow geometry={nodes.Cube009_2.geometry} material={materials.red}>
         <ramMaterial ref={matRef} attach="material" color="hotpink" />
       </mesh>
       {active && <Interface name='ram' description={description} />}

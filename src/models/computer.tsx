@@ -15,28 +15,37 @@ const Model = ({ ...props }: JSX.IntrinsicElements['group']) => {
     <group {...props} dispose={null}>
       <mesh 
         name="motherboard"
+        receiveShadow
         geometry={nodes.motherboard.geometry}
         material={materials.green}
       />
       <mesh
+        castShadow
+        receiveShadow
         name="io"
         geometry={nodes.io.geometry}
         material={nodes.io.material}
         position={[-0.092, 0.014, 0.032]}
       />
       <mesh
+        castShadow
+        receiveShadow
         name="motherboard_gpu_io"
         geometry={nodes.motherboard_gpu_io.geometry}
         material={nodes.motherboard_gpu_io.material}
         position={[-0.044, -0.077, 0.009]}
       />
       <mesh
+        castShadow
+        receiveShadow
         name="motherboard_cpu_io"
         geometry={nodes.motherboard_cpu_io.geometry}
         material={materials.white}
         position={[0, 0, 0.005]}
       />
       <mesh
+        castShadow
+        receiveShadow
         name="ram_io"
         geometry={nodes.ram_io.geometry}
         material={nodes.ram_io.material}

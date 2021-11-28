@@ -6,7 +6,7 @@ import Interface from './interface'
 import { GLTFResult } from './constants'
 
 const description = `
-More control causes additional energy to be redistributed to the virus.
+Causes additional energy to be redistributed to the virus.
 `
 
 const PSU = () => {
@@ -18,6 +18,7 @@ const PSU = () => {
   return (
     <a.mesh
       name='psu'
+      castShadow
       onClick={(e) => {
         e.stopPropagation()
         send({ type: 'VIEW_MODULE', module: active ? null : 'psu' })

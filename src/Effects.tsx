@@ -4,9 +4,9 @@ import { BlendFunction } from 'postprocessing'
 
 const Effects = () => {
   return (
-    <EffectComposer>
+    <EffectComposer multisampling={8}>
       <Bloom
-        intensity={0.6} // The bloom intensity.
+        intensity={0.9} // The bloom intensity.
         height={300} // render height
         luminanceThreshold={0.4} // luminance threshold. Raise this value to mask out darker elements in the scene.
         luminanceSmoothing={0.9} // smoothness of the luminance threshold. Range is [0, 1]
@@ -21,10 +21,10 @@ const Effects = () => {
         distanceFalloff={0.0} // distance falloff. min: 0, max: 1
         rangeThreshold={0.5} // local occlusion range threshold at which the occlusion starts to fade out. min: 0, max: 1
         rangeFalloff={0.1} // occlusion range falloff. min: 0, max: 1
-        luminanceInfluence={0.9} // how much the luminance of the scene influences the ambient occlusion
+        luminanceInfluence={0} // how much the luminance of the scene influences the ambient occlusion
         radius={20} // occlusion sampling radius
-        scale={0.5} // scale of the ambient occlusion
-        bias={0.5} // occlusion bias
+        scale={1} // scale of the ambient occlusion
+        bias={0.035} // occlusion bias
       />
 
     </EffectComposer>

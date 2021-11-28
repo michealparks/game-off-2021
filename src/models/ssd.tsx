@@ -6,7 +6,7 @@ import Interface from './interface'
 import { GLTFResult } from './constants'
 
 const description = `
-More control allows additional units to be built.
+allows additional units to be built.
 `
 
 const SSD = () => {
@@ -17,6 +17,8 @@ const SSD = () => {
 
   return (
     <a.mesh
+      name='ssd'
+      castShadow
       onClick={(e) => {
         e.stopPropagation()
         send({ type: 'VIEW_MODULE', module: active ? null : 'ssd' })

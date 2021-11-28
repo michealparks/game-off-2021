@@ -9,7 +9,7 @@ import Interface from './interface'
 import { player } from '../machines/player'
 
 const description = `
-More control creates a greater chance every clock tick that a random unit will be generated.
+Creates a greater chance every clock tick that a random unit will be generated.
 `
 
 const GPU = () => {
@@ -26,6 +26,7 @@ const GPU = () => {
   return (
     <a.group
       name='gpu'
+      castShadow
       onClick={(e) => {
         e.stopPropagation()
         send({ type: 'VIEW_MODULE', module: active ? null : 'gpu' })

@@ -9,7 +9,7 @@ import Interface from './interface'
 import { player } from '../machines/player'
 
 const description = `
-More control speeds up the game clock for the virus only.
+Speeds up the game clock for the virus.
 `
 
 const CPU = () => {
@@ -26,6 +26,7 @@ const CPU = () => {
   return (
     <>
       <a.mesh
+        castShadow
         name='cpu'
         geometry={nodes.cpu.geometry}
         material={nodes.cpu.material}

@@ -35,8 +35,11 @@ const Buttons = ({ unit, part }: ButtonProps) => {
   const hasCooldown = elapsedCooldown > 0
 
   return (
-    <div className='border rounded border-white'>
-      <div style={{ '--expand-speed': `${cooldown}s` }} className='animate-expand' />
+    <div className='relative overflow-hidden border rounded border-white bg-opacity-50'>
+      {hasCooldown && <div
+        style={{transform: `scale(${1 - (elapsedCooldown / cooldown)}, 1)`}}
+        className='absolute w-full h-full bg-white origin-left transition-transform duration-300'
+      />}
       <Button
         className={cn('icon-plus border-r border-white', {
           'invisible pointer-events-none': hasCooldown

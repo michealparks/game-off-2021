@@ -20,7 +20,7 @@ const Interface = () => {
   }, [])
 
   return (
-    <div className='absolute inset-0 pointer-events-none h-full w-full z-10 flex flex-col justify-between items-end select-none'>
+    <div className='absolute inset-0 pointer-events-none h-full w-full z-10 flex flex-col justify-between items-end select-none text-white'>
       <Stats />
 
       <div className='p-2 pointer-events-auto'>

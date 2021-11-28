@@ -4,7 +4,7 @@
   "scripts": {
     "start": "vite --host",
     "build": "vite build",
-    "assets": "npx gltfjsx computer.glb --types -k -p=3",
+    "assets": "npx gltfjsx ./src/assets/computer.glb --types -k -s -p=3",
     "serve": "vite preview --host"
   },
   "engines": {

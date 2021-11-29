@@ -27,7 +27,7 @@ const App = () => {
   }, [])
 
   const { tier, gpu = '' } = useDetectGPU()
-  const isLowTierGPU = true ||  tier < 2 && /apple (gpu|m1)/i.test(gpu) === false
+  const isLowTierGPU = tier < 2 && /apple (gpu|m1)/i.test(gpu) === false
 
   return (
     <div className='h-screen w-screen'>

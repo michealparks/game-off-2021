@@ -31,7 +31,9 @@ const RAM = () => {
 
   const matRef = useRef<THREE.ShaderMaterial>(null!)
 
-  useFrame(() => (matRef.current.uniforms.time.value += 0.01))
+  useFrame(() => {
+    matRef.current.uniforms.time.value += 0.01
+  })
 
   return (
     <a.group
@@ -47,7 +49,7 @@ const RAM = () => {
       <mesh castShadow receiveShadow geometry={nodes.Cube009.geometry} material={nodes.Cube009.material} />
       <mesh castShadow receiveShadow geometry={nodes.Cube009_1.geometry} material={nodes.Cube009_1.material} />
       <mesh castShadow geometry={nodes.Cube009_2.geometry} material={materials.red}>
-        <ramMaterial ref={matRef} attach="material" color="hotpink" />
+        <ramMaterial ref={matRef} attach='material' color='hotpink' />
       </mesh>
       {active && <Interface name='ram' description={description} />}
     </a.group>

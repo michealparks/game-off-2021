@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { useThree } from '@react-three/fiber'
-import { EffectComposer, Bloom, Noise, Vignette, SSAO } from '@react-three/postprocessing'
+import { EffectComposer, Bloom, Noise, Vignette } from '@react-three/postprocessing'
 import { listener } from './util/audio'
 
 const Effects = () => {

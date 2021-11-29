@@ -17,9 +17,3 @@ export const COST = {
 export type Unit = 'harvester' | 'soldier'
 export type AiUnit = 'defender'
 export type Part = 'cpu' | 'gpu' | 'ram' | 'ssd' | 'psu'
-
-export interface Resources {
-  energy: number
-  harvester: number
-  soldier: number
-}

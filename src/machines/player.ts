@@ -1,6 +1,6 @@
 import { createMachine, interpret, assign } from 'xstate'
 import { computer } from './computer'
-import { CONFIG, COST, Unit, Part, Resources } from './constants'
+import { CONFIG, COST, Unit, Part } from './constants'
 
 interface Context {
   elapsed: number

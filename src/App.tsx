@@ -6,17 +6,25 @@ import Interface from './interface'
 import Effects from './Effects'
 import Computer from './models/computer'
 import Lights from './Lights'
-import { Suspense } from 'react'
+import { Suspense, useEffect } from 'react'
 import { audio } from './util/audio'
 
 audio.create('click', new URL('./assets/click.wav', import.meta.url).href)
 audio.create('attach', new URL('./assets/attach.wav', import.meta.url).href)
 audio.create('remove', new URL('./assets/remove.wav', import.meta.url).href)
 
+audio.create('track1', new URL('./assets/track_1.mp3', import.meta.url).href)
+
 const App = () => {
   if (import.meta.env.DEV) {
     useStats()
   }
+
+  useEffect(() => {
+    document.addEventListener('click', () => {
+      audio.loop('track1')
+    }, { once: true })
+  }, [])
 
   return (
     <div className='h-screen w-screen'>

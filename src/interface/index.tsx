@@ -10,10 +10,7 @@ const Interface = () => {
   const [state, send] = useGame()
 
   useEffect(() => {
-    send({
-      type: 'START',
-      energy: 10,
-    })
+    send({ type: 'START', energy: 10 })
   }, [])
 
   return (
@@ -27,7 +24,7 @@ const Interface = () => {
         <Button
           onClick={() => {
             audio.play('click')
-            send('PAUSE')
+            send({ type: 'PAUSE' })
           }}
           label='pause'
         />
@@ -35,6 +32,7 @@ const Interface = () => {
 
       {state.matches('ended') && (
         <p>Ended</p>
+        
       )}
 
       {state.matches('paused') && (
@@ -48,7 +46,8 @@ const Interface = () => {
           <Button
             onClick={() => {
               audio.play('click')
-              send('START')
+              console.log('unpause')
+              send({ type: 'UNPAUSE' })
             }}
             label='resume'
           />

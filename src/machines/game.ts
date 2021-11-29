@@ -1,15 +1,18 @@
 import { interpret, createMachine, assign } from 'xstate'
-import { Unit, Part, Resources } from './constants'
+import { Part } from './constants'
 import { player } from './player'
 
 interface Context {
   viewedModule: null | Part
+  conclusion: null | {
+    status: 'win' | 'lose'
+  }
 }
 
 type Events =
-  | { type: 'START'; resources: Resources }
-  | { type: 'RESUME'; context: Context }
+  | { type: 'START'; energy: number }
   | { type: 'PAUSE' }
+  | { type: 'UNPAUSE' }
   | { type: 'END_GAME' }
   | { type: 'RESET' }
   | { type: 'TICK' }
@@ -20,6 +23,7 @@ const machine = createMachine<Context, Events>(
     id: 'game',
     initial: 'idle',
     context: {
+      conclusion: null,
       viewedModule: null,
     },
     states: {
@@ -29,10 +33,6 @@ const machine = createMachine<Context, Events>(
             target: 'running',
             actions: 'start',
           },
-          RESUME: {
-            target: 'running',
-            actions: 'resume'
-          }
         },
       },
       running: {
@@ -46,14 +46,14 @@ const machine = createMachine<Context, Events>(
       },
       paused: {
         on: {
-          START: 'running',
+          UNPAUSE: 'running',
         },
       },
       ended: {
         on: {
-          RESET: {
-            target: 'idle',
-            actions: 'reset'
+          START: {
+            target: 'running',
+            actions: 'start'
           },
         },
       },
@@ -64,25 +64,9 @@ const machine = createMachine<Context, Events>(
       start: assign((_ctx, event) => {
         if (event.type !== 'START') return {}
 
-        player.send({ type: 'START', resources: event.resources })
+        player.send(event)
 
         return {}
-      }),
-      reset: assign((_ctx, event) => {
-        if (event.type !== 'END_GAME') return {}
-
-        player.send({
-          type: 'START',
-          resources: {
-            energy: 0,
-            harvester: 0,
-            soldier: 0,
-          }
-        })
-
-        return {
-          viewedModule: null,
-        }
       }),
       setViewedModule: assign((_ctx, event) => {
         if (event.type !== 'VIEW_MODULE') return {}

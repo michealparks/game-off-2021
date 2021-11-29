@@ -1,8 +1,7 @@
 
 import { useEffect } from 'react'
 import { useGame } from '../hooks/game'
-import { COST } from '../machines/constants'
-import { player } from '../machines/player'
+import { audio } from '../util/audio'
 import Stats from './stats'
 import Button from './button'
 import cn from 'classnames'
@@ -13,11 +12,7 @@ const Interface = () => {
   useEffect(() => {
     send({
       type: 'START',
-      resources: {
-        energy: 10,
-        harvester: 5,
-        soldier: 5,
-      }
+      energy: 10,
     })
   }, [])
 
@@ -30,18 +25,11 @@ const Interface = () => {
 
       <div className='p-2 pointer-events-auto'>
         <Button
-          onClick={() => send('PAUSE')}
+          onClick={() => {
+            audio.play('click')
+            send('PAUSE')
+          }}
           label='pause'
-        />
-
-        <Button
-          onClick={() => player.send({ type: 'BUILD_UNIT', unit: 'harvester' })}
-          label={`Build harvester (-${COST.harvester})`}
-        />
-
-        <Button
-          onClick={() => player.send({ type: 'BUILD_UNIT', unit: 'soldier'})}
-          label={`Build soldier (-${COST.soldier})`}
         />
       </div>
 
@@ -58,7 +46,10 @@ const Interface = () => {
             Paused
           </h2>
           <Button
-            onClick={() => send('START')}
+            onClick={() => {
+              audio.play('click')
+              send('START')
+            }}
             label='resume'
           />
         </div>

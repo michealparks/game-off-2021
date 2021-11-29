@@ -1,5 +1,5 @@
 import { useRef } from 'react'
-import { useGLTF } from '@react-three/drei'
+import { useGLTF, meshBounds } from '@react-three/drei'
 import { useFrame } from '@react-three/fiber'
 import { useSpring, a } from '@react-spring/three'
 import { useGame } from '../hooks/game'
@@ -12,10 +12,6 @@ import { audio } from '../util/audio'
 const description = `
 Speeds up the game clock for the virus.
 `
-
-const handlePartClick = (part: string) => (e) => {
-
-}
 
 const CPU = () => {
   const [state, send] = useGame()
@@ -44,16 +40,11 @@ const CPU = () => {
       />
       <a.group
         name='cpu-cooler'
+        raycast={meshBounds}
         onClick={(e) => {
           e.stopPropagation()
-          if (active) {
-            audio.play('attach')
-            send({ type: 'VIEW_MODULE', module: null })
-          } else {
-            audio.play('remove')
-            send({ type: 'VIEW_MODULE', module: 'cpu' })
-          }
-          
+          audio.play(active ? 'attach' : 'remove')
+          send({ type: 'VIEW_MODULE', module: active ? null : 'cpu' })
         }}
         position-x={0}
         position-y={0}

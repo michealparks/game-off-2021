@@ -14,8 +14,8 @@ const Stats = () => {
       <p>interval: {context.interval}</p>
       <h4>resources</h4>
       <p>energy: {energy}</p>
-      <p>harvesters: {context.harvester} / {context.maxHarvester}</p>
-      <p>soldiers: {context.soldier} / {context.maxSoldier}</p>
+      <p>harvesters: {context.harvester} / {context.max.harvester}</p>
+      <p>soldiers: {context.soldier} / {context.max.soldier}</p>
     </div>
   )
 }

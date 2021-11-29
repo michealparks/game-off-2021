@@ -4,7 +4,7 @@ export const CONFIG = {
   cooldown: 7,
   maxHarvester: 10,
   maxSoldier: 10,
-  ssdHarvesterBonus: 3,
+  ssdHarvesterBonus: 2,
   cpuHarvesterLimiter: 0.01,
   psuHarvesterLimiter: 0.05,
 }

@@ -13,13 +13,15 @@ interface Context {
   energy: number
   harvester: number
   soldier: number
-  maxHarvester: number
-  maxSoldier: number
+  max: {
+    harvester: number
+    soldier: number
+  }
 }
 
 type Events = 
   | { type: 'TICK' }
-  | { type: 'START'; resources: Resources }
+  | { type: 'START'; energy: number }
   | { type: 'CHANGE_SPEED'; amount: number }
   | { type: 'BUILD_UNIT'; unit: Unit }
   | { type: 'SEND_UNIT'; unit: Unit; part: Part }
@@ -41,11 +43,13 @@ const machine = createMachine<Context, Events>(
       },
       interval: 0,
       cooldown: 0,
-      maxHarvester: 0,
-      maxSoldier: 0,
       energy: 0,
       harvester: 0,
       soldier: 0,
+      max: {
+        harvester: 0,
+        soldier: 0,
+      },
     },
     states: {
       idle: {
@@ -66,13 +70,9 @@ const machine = createMachine<Context, Events>(
           CHANGE_SPEED: {
             actions: 'changeSpeed'
           },
-          BUILD_UNIT: {
-            actions: 'buildUnit',
-            cond: 'hasEnergyForUnit',
-          },
           SEND_UNIT: {
             actions: 'sendUnit',
-            cond: 'hasUnit',
+            cond: 'canSendUnit',
           },
           RECALL_UNIT: {
             actions: 'recallUnit',
@@ -84,11 +84,10 @@ const machine = createMachine<Context, Events>(
   },
   {
     guards: {
-      hasEnergyForUnit: (ctx, event) => (
-        event.type === 'BUILD_UNIT' && ctx.energy >= COST[event.unit]
-      ),
-      hasUnit: (ctx, event) => (
-        event.type === 'SEND_UNIT' && ctx[event.unit] > 0
+      canSendUnit: (ctx, event) => (
+        event.type === 'SEND_UNIT' &&
+        ctx.energy >= COST[event.unit] &&
+        ctx[event.unit] < ctx.max[event.unit]
       ),
       hasSentUnit: (_ctx, event) => (
         event.type === 'RECALL_UNIT' && computer.state.context[event.part][event.unit] >= 1
@@ -109,29 +108,38 @@ const machine = createMachine<Context, Events>(
 
         return {
           elapsed: 0,
-          elapsedCooldown: 0,
+          elapsedCooldown: {
+            harvester: 0,
+            soldier: 0,
+          },
           interval: CONFIG.interval,
           cooldown: CONFIG.cooldown,
-          maxHarvester: CONFIG.maxHarvester,
-          maxSoldier: CONFIG.maxSoldier,
-          ...event.resources
+          energy: event.energy,
+          harvester: 0,
+          soldier: 0,
+          max: {
+            harvester: CONFIG.maxHarvester,
+            soldier: CONFIG.maxSoldier,
+          },
         }
       }),
       process: assign((ctx, _event) => {
         const { cpu, gpu, ram, ssd, psu } = computer.state.context
-
         const cpuWeight = -(cpu.harvester * CONFIG.cpuHarvesterLimiter)
         const ramWeight = -(1 + ram.harvester / 2)
         const psuWeight = (psu.harvester * CONFIG.psuHarvesterLimiter)
         const ssdWeight = (ssd.harvester * CONFIG.ssdHarvesterBonus)
+        const gpuBonus = gpu.harvester === 0 ? 0 : Math.random() * Math.max(5, 200 - gpu.harvester * 2) < 1 ? 10 : 0
 
         return {
           elapsed: ctx.elapsed + 1,
           interval: Math.max(CONFIG.minInterval, CONFIG.interval + cpuWeight),
           cooldown: CONFIG.cooldown,
-          energy: formatFloat(ctx.energy + psuWeight),
-          maxHarvester: CONFIG.maxHarvester + ssdWeight,
-          maxSoldier: CONFIG.maxHarvester + ssdWeight,
+          energy: formatFloat(ctx.energy + psuWeight + gpuBonus),
+          max: {
+            harvester: CONFIG.maxHarvester + ssdWeight,
+            soldier: CONFIG.maxHarvester + ssdWeight,
+          },
           elapsedCooldown: {
             harvester: Math.max(0, ctx.elapsedCooldown.harvester + ramWeight),
             soldier: Math.max(0, ctx.elapsedCooldown.soldier + ramWeight),
@@ -143,16 +151,6 @@ const machine = createMachine<Context, Events>(
 
         return { interval: ctx.interval + event.amount }
       }),
-      buildUnit: assign((ctx, event) => {
-        if (event.type !== 'BUILD_UNIT') return {}
-
-        const { unit } = event
-
-        return {
-          energy: formatFloat(ctx.energy - COST[unit]),
-          [unit]: ctx[unit] + 1,
-        }
-      }),
       sendUnit: assign((ctx, event) => {
         if (event.type !== 'SEND_UNIT') return {}
 
@@ -161,7 +159,8 @@ const machine = createMachine<Context, Events>(
         computer.send({ type: 'SEND_UNIT', unit, part })
 
         return {
-          [unit]: ctx[unit] - 1,
+          [unit]: ctx[unit] + 1,
+          energy: formatFloat(ctx.energy - COST[unit]),
           elapsedCooldown: {
             ...ctx.elapsedCooldown,
             [unit]: CONFIG.cooldown,
@@ -176,7 +175,8 @@ const machine = createMachine<Context, Events>(
         computer.send({ type: 'RECALL_UNIT', unit, part })
 
         return {
-          [unit]: ctx[unit] + 1,
+          [unit]: ctx[unit] - 1,
+          energy: formatFloat(ctx.energy + COST[unit]),
           elapsedCooldown: {
             ...ctx.elapsedCooldown,
             [unit]: CONFIG.cooldown,

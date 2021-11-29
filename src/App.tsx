@@ -9,6 +9,7 @@ import Lights from './Lights'
 import { Suspense } from 'react'
 import { audio } from './util/audio'
 
+audio.create('click', new URL('./assets/click.wav', import.meta.url).href)
 audio.create('attach', new URL('./assets/attach.wav', import.meta.url).href)
 audio.create('remove', new URL('./assets/remove.wav', import.meta.url).href)
 

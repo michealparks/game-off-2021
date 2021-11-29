@@ -1,6 +1,6 @@
 import * as THREE from 'three'
 import { Canvas } from '@react-three/fiber'
-import { OrbitControls, AdaptiveEvents, AdaptiveDpr } from '@react-three/drei'
+import { OrbitControls, AdaptiveEvents, AdaptiveDpr, useDetectGPU } from '@react-three/drei'
 import { useStats } from './hooks/useStats'
 import Interface from './interface'
 import Effects from './Effects'
@@ -26,25 +26,26 @@ const App = () => {
     }, { once: true })
   }, [])
 
+  const { tier, gpu = '' } = useDetectGPU()
+  const isLowTierGPU = true ||  tier < 2 && /apple (gpu|m1)/i.test(gpu) === false
+
   return (
     <div className='h-screen w-screen'>
-      <Suspense fallback={null}>
-        <Canvas
-          shadows
-          mode='concurrent'
-          performance={{ min: 0.7 }}
-          dpr={Math.min(1.5, window.devicePixelRatio)}
-          gl={{ alpha: false, antialias: false }}
-          camera={{ position: new THREE.Vector3(0.25, 0.15, 0.25) }}
-        >
-          <AdaptiveDpr pixelated />
-          <AdaptiveEvents />
-          <Effects />
-          <OrbitControls enablePan={false} enableZoom={false} enableRotate={true} />
-          <Lights />
-          <Computer />
-        </Canvas>
-      </Suspense>
+      <Canvas
+        shadows
+        mode='concurrent'
+        performance={{ min: 0.75 }}
+        dpr={Math.min(isLowTierGPU ? 0.9 : 1.5, window.devicePixelRatio)}
+        gl={{ alpha: false, antialias: false }}
+        camera={{ position: new THREE.Vector3(0.25, 0.15, 0.25) }}
+      >
+        <AdaptiveDpr pixelated />
+        <AdaptiveEvents />
+        <Effects />
+        <OrbitControls enablePan={false} enableZoom={false} enableRotate={true} />
+        <Lights bake={isLowTierGPU} />
+        <Computer />
+      </Canvas>
       <Interface />
     </div>
   )

@@ -1,6 +1,5 @@
 
 import { BakeShadows, softShadows, useDetectGPU } from '@react-three/drei'
-import { useMemo } from 'react'
 
 softShadows({
   frustum: 1.75,
@@ -10,13 +9,12 @@ softShadows({
   rings: 11, // Rings (default: 11) must be a int
 })
 
+interface Props {
+  bake: boolean
+}
 
-const Lights = () => {
+const Lights = ({ bake }: Props) => {
   const mapsize = 1
-  const { tier, gpu = '' } = useDetectGPU()
-  const bake = useMemo(() =>
-    tier < 2 && /apple (gpu|m1)/i.test(gpu) === false
-  , [tier, gpu])
 
   return (
     <>

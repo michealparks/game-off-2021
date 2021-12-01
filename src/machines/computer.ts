@@ -60,10 +60,10 @@ const machine = createMachine<Context, Events>(
             actions: ['updateUnits', 'process']
           },
           RECALL_UNIT: {
-            actions: 'process'
+            actions: ['updateUnits', 'process']
           },
           KILL_UNIT: {
-            actions: 'process'
+            actions: ['updateUnits', 'process']
           }
         }
       }
@@ -84,7 +84,6 @@ const machine = createMachine<Context, Events>(
       }),
       process: assign((ctx, event) => {
         const { part } = event
-        console.log(ctx[part].harvester, ctx[part].soldier)
         const partControl = (ctx[part].harvester + ctx[part].soldier) / CONFIG.unitsToControl
         
         let control = 0

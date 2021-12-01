@@ -1,6 +1,7 @@
 import { createMachine, interpret, assign } from 'xstate'
 import { computer } from './computer'
 import { Part, parts } from './constants'
+import { showMessage } from '../interface/message'
 
 interface Context {
   interval: number
@@ -58,17 +59,19 @@ const machine = createMachine<Context, Events>(
         if (event.type !== 'TICK') return {}
 
         console.log('focusing')
+        const { control } = computer.state.context
 
         if (flip()) return {}
 
-        if (flip()) {
+        if (control < 0.5 && flip()) {
           return { focus: null }
-        } else if (flip()) {
+        } else if ((control < 0.6 && flip()) || control >= 0.6) {
+          console.log('laser focusing')
+
           let i = 0
           const p = [...parts].sort(() => Math.random() - 0.5)
           for (const name of parts) {
             const part = computer.state.context[name]
-            console.log(part)
             if (part.harvester > 0 || part.soldier > 0) {
               return { focus: name }
             }
@@ -80,17 +83,37 @@ const machine = createMachine<Context, Events>(
       process: assign((ctx, _event) => {
         if (ctx.focus === null) return {}
 
-        if (flip()) {
-          const part = computer.state.context[ctx.focus]
+        const { focus } = ctx
+        const { control } = computer.state.context
+
+        if ((control < 0.6 && flip()) || control >= 0.6) {
+          const part = computer.state.context[focus]
           if (part.soldier) {
             let chanceToKill = 1 - (part.soldier / 10)
             if (Math.random() > chanceToKill) {
+              const unit = flip() ? 'harvester' : 'soldier'
+
+              showMessage(part[unit] <= 0
+                ? `system installed anti${unit} in ${focus}`
+                : `system killed ${unit} in ${focus}`, 5)
+
               computer.send({
                 type: 'KILL_UNIT',
-                unit: flip() ? 'harvester' : 'soldier',
-                part: ctx.focus
+                unit,
+                part: focus
               })
             }
+          } else {
+            const unit = 'harvester'
+            showMessage(part[unit] <= 0
+              ? `system installed anti${unit} in ${focus}`
+              : `system killed ${unit} in ${focus}`, 5)
+
+            computer.send({
+              type: 'KILL_UNIT',
+              unit,
+              part: focus,
+            })
           }
         }
 

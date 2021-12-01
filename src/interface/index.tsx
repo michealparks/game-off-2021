@@ -17,7 +17,7 @@ const Interface = () => {
   return (
     <>
       <Progress />
-      {import.meta.env.DEV && <DebugStats />}
+      {false && import.meta.env.DEV && <DebugStats />}
 
       <div className={cn(
         'absolute inset-0 pointer-events-none h-full w-full z-10 flex flex-col justify-between items-end',
@@ -39,7 +39,7 @@ const Interface = () => {
         {state.matches('idle') && (
           <div className={cn(
             'absolute z-50 w-full h-full bg-black bg-opacity-30 backdrop-filter backdrop-blur-sm',
-            'grid place-content-center pointer-events-auto text-white'
+            'grid place-content-center pointer-events-auto text-white p-4'
           )}>
             <p className='mb-4'>
               Interface with each computer module with a click of the m̸o̴u̶s̴e̵.<br />

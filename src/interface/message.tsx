@@ -11,7 +11,7 @@ const Message = () => {
   }
 
   return (
-    <div className='mb-4 bg-red-500 p-4 flex gap-4 items-center'>
+    <div className='mb-4 bg-red-500 p-4 flex gap-4 items-center sm:text-xs'>
       <i className='icon-alert-triangle' />
       {message.context.text}
       <i className='icon-alert-triangle' />

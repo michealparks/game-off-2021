@@ -7,10 +7,10 @@ const Progress = () => {
   const { control } = computer.context
 
   return (
-    <div className='pointer-events-none fixed w-full bottom-0 grid place-content-center pb-4 text-white text-center'>
+    <div className='pointer-events-none fixed w-full bottom-0 grid sm:place-content-center pb-4 text-white text-center'>
       <Message />
       <Focus />
-      <div className='w-full max-w-sm flex justify-center flex-wrap'>
+      <div className='w-60 flex sm:justify-center flex-wrap'>
         <p className='flex text-center'>
           {control < 0.35
             ? 'catastrophic failure likeliness'

@@ -58,7 +58,7 @@ const App = () => {
       </div>
       {entered === false && 
         <div
-          className='absolute top-0 left-0 h-screen w-screen grid place-content-center text-white bg-black z-50'
+          className='absolute top-0 left-0 h-screen w-screen grid place-content-center text-white bg-black z-50 p-3'
           onClick={() => {
             audio.volume('intro', 0.3)
             audio.loop('intro')

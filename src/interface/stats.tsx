@@ -12,7 +12,7 @@ const Stats = () => {
   }
 
   return (
-    <div className='p-2'>
+    <div className='p-2 text-xs sm:text-base'>
       <h4>resources</h4>
       <p>energy: {energy}</p>
       <p>harvesters: {context.harvester} / {context.max.harvester}</p>

@@ -127,7 +127,7 @@ const machine = createMachine<Context, Events>(
       process: assign((ctx, _event) => {
         const { cpu, gpu, ram, ssd, psu } = computer.state.context
         const cpuWeight = -(cpu.harvester * CONFIG.cpuHarvesterLimiter)
-        const ramWeight = -(1 + ram.harvester / 2)
+        const ramWeight = ram.harvester < 0 ? 0 : -(1 + ram.harvester / 2)
         const psuWeight = (psu.harvester * CONFIG.psuHarvesterLimiter)
         const ssdWeight = (ssd.harvester * CONFIG.ssdHarvesterBonus)
         const gpuBonus = gpu.harvester === 0 ? 0 : Math.random() * Math.max(5, 200 - gpu.harvester * 2) < 1 ? 10 : 0

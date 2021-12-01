@@ -2,6 +2,7 @@ import { createMachine, interpret, assign } from 'xstate'
 import { computer } from './computer'
 import { Part, parts } from './constants'
 import { showMessage } from '../interface/message'
+import { game } from './game'
 
 interface Context {
   interval: number
@@ -58,6 +59,10 @@ const machine = createMachine<Context, Events>(
       decideFocus: assign((_ctx, event) => {
         if (event.type !== 'TICK') return {}
 
+        if (game.state.matches('ended')) {
+          return { focus: null }
+        }
+
         console.log('focusing')
         const { control } = computer.state.context
 
@@ -82,6 +87,10 @@ const machine = createMachine<Context, Events>(
       }),
       process: assign((ctx, _event) => {
         if (ctx.focus === null) return {}
+
+        if (game.state.matches('ended')) {
+          return {}
+        }
 
         const { focus } = ctx
         const { control } = computer.state.context

@@ -1,6 +1,7 @@
 import { createMachine, interpret, assign } from 'xstate'
 import { computer } from './computer'
 import { CONFIG, COST, Unit, Part } from './constants'
+import { game } from './game'
 
 interface Context {
   elapsed: number
@@ -130,6 +131,10 @@ const machine = createMachine<Context, Events>(
         const psuWeight = (psu.harvester * CONFIG.psuHarvesterLimiter)
         const ssdWeight = (ssd.harvester * CONFIG.ssdHarvesterBonus)
         const gpuBonus = gpu.harvester === 0 ? 0 : Math.random() * Math.max(5, 200 - gpu.harvester * 2) < 1 ? 10 : 0
+
+        if (game.state.matches('ended')) {
+          return {}
+        }
 
         return {
           elapsed: ctx.elapsed + 1,

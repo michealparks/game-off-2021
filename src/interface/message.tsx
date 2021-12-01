@@ -4,16 +4,16 @@ import { message } from '../machines/message'
 
 
 const Message = () => {
-  const [message] = useMessage()
+  const [state] = useMessage()
 
-  if (!message.context.text) {
+  if (!state.context.text) {
     return null
   }
 
   return (
-    <div className='mb-4 bg-red-500 p-4 flex gap-4 items-center sm:text-xs'>
+    <div className='mb-4 bg-red-500 p-4 flex gap-4 items-center justify-center text-xs sm:text-sm'>
       <i className='icon-alert-triangle' />
-      {message.context.text}
+      {state.context.text}
       <i className='icon-alert-triangle' />
     </div>
   )

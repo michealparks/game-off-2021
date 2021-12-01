@@ -5,7 +5,7 @@ const Focus = () => {
   const { focus } = ai.context
 
   return (
-    <div className='mb-4'>
+    <div className='mb-4 text-xs sm:text-base'>
       {focus ? `System is scanning ${focus}...` : ''}
     </div>
   )

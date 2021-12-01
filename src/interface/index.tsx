@@ -33,6 +33,7 @@ const Interface = () => {
               send({ type: 'PAUSE' })
             }}
             label='pause'
+            className='text-sm sm:text-base'
           />
         </div>
 
@@ -60,6 +61,7 @@ const Interface = () => {
                 player.send({ type: 'START', energy: 20 })
               }}
               label='start'
+              className='text-sm sm:text-base'
             />
           </div>
         )}
@@ -82,6 +84,7 @@ const Interface = () => {
             <Button
               onClick={() => (window.location = window.location)}
               label='do things and get terminated again?'
+              className='text-sm sm:text-base'
             />
           </div>
         )}
@@ -91,7 +94,7 @@ const Interface = () => {
             'absolute z-50 w-full h-full bg-black bg-opacity-30 backdrop-filter backdrop-blur-sm',
             'grid place-content-center pointer-events-auto text-white'
           )}>
-            <h2 className='uppercase text-8xl'>
+            <h2 className='uppercase text-5xl sm:text-8xl'>
               Paused
             </h2>
             <Button

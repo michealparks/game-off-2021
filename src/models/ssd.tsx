@@ -23,7 +23,8 @@ const SSD = () => {
       receiveShadow
       onClick={(e) => {
         e.stopPropagation()
-        audio.play(active ? 'attach' : 'remove')
+        if (state.context.viewedModule !== null) audio.play('attach', 50)
+        audio.play(active ? 'attach' : 'remove', active ? 50 : 0)
         send({ type: 'VIEW_MODULE', module: active ? null : 'ssd' })
       }}
       geometry={nodes.ssd.geometry}

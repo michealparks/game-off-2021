@@ -13,9 +13,6 @@ const Stats = () => {
 
   return (
     <div className='p-2'>
-      <p>elapsed: {context.elapsed}</p>
-      <p>interval: {context.interval}</p>
-
       <h4>resources</h4>
       <p>energy: {energy}</p>
       <p>harvesters: {context.harvester} / {context.max.harvester}</p>

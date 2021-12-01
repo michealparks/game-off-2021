@@ -20,8 +20,8 @@ interface Context {
 }
 
 type Events = 
-  | { type: 'TICK' }
   | { type: 'START'; energy: number }
+  | { type: 'TICK' }
   | { type: 'CHANGE_SPEED'; amount: number }
   | { type: 'BUILD_UNIT'; unit: Unit }
   | { type: 'SEND_UNIT'; unit: Unit; part: Part }

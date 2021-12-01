@@ -23,7 +23,9 @@ const GPU = () => {
   const fan = useRef<THREE.Mesh>(null!)
 
   useFrame(() => {
-    fan.current.rotation.y += 0.01 + (1 / player.state.context.interval)
+    if (state.matches('running')) {
+      fan.current.rotation.y += 0.01 + (1 / player.state.context.interval)
+    }
   })
 
   return (
@@ -31,7 +33,8 @@ const GPU = () => {
       name='gpu'
       onClick={(e) => {
         e.stopPropagation()
-        audio.play(active ? 'attach' : 'remove')
+        if (state.context.viewedModule !== null) audio.play('attach', 50)
+        audio.play(active ? 'attach' : 'remove', active ? 50 : 0)
         send({ type: 'VIEW_MODULE', module: active ? null : 'gpu' })
       }}
       position-x={0.003}

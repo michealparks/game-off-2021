@@ -6,8 +6,9 @@ import Interface from './interface'
 import Effects from './Effects'
 import Computer from './models/computer'
 import Lights from './Lights'
-import { Suspense, useEffect } from 'react'
+import { useEffect } from 'react'
 import { audio } from './util/audio'
+import Virus from '../Virus'
 
 audio.create('click', new URL('./assets/click.wav', import.meta.url).href)
 audio.create('attach', new URL('./assets/attach.wav', import.meta.url).href)
@@ -19,12 +20,6 @@ const App = () => {
   if (import.meta.env.DEV) {
     useStats()
   }
-
-  useEffect(() => {
-    document.addEventListener('click', () => {
-      audio.loop('track1')
-    }, { once: true })
-  }, [])
 
   const { tier, gpu = '' } = useDetectGPU()
   const isLowTierGPU = tier < 2 && /apple (gpu|m1)/i.test(gpu) === false
@@ -45,6 +40,7 @@ const App = () => {
         <OrbitControls enablePan={false} enableZoom={false} enableRotate={true} />
         <Lights bake={isLowTierGPU} />
         <Computer />
+        {/* <Virus /> */}
       </Canvas>
       <Interface />
     </div>

@@ -7,6 +7,7 @@ export const CONFIG = {
   ssdHarvesterBonus: 2,
   cpuHarvesterLimiter: 0.01,
   psuHarvesterLimiter: 0.05,
+  unitsToControl: 20,
 }
 
 export const COST = {

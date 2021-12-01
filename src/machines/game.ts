@@ -1,6 +1,5 @@
 import { interpret, createMachine, assign } from 'xstate'
 import { Part } from './constants'
-import { player } from './player'
 
 interface Context {
   viewedModule: null | Part
@@ -10,7 +9,7 @@ interface Context {
 }
 
 type Events =
-  | { type: 'START'; energy: number }
+  | { type: 'START' }
   | { type: 'PAUSE' }
   | { type: 'UNPAUSE' }
   | { type: 'END_GAME' }
@@ -29,10 +28,7 @@ const machine = createMachine<Context, Events>(
     states: {
       idle: {
         on: {
-          START: {
-            target: 'running',
-            actions: 'start',
-          },
+          START: 'running'
         },
       },
       running: {
@@ -61,13 +57,6 @@ const machine = createMachine<Context, Events>(
   },
   {
     actions: {
-      start: assign((_ctx, event) => {
-        if (event.type !== 'START') return {}
-
-        player.send(event)
-
-        return {}
-      }),
       setViewedModule: assign((_ctx, event) => {
         if (event.type !== 'VIEW_MODULE') return {}
 

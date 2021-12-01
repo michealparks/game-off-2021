@@ -4,6 +4,7 @@ import { useGame } from '../hooks/game'
 import { useComputer } from '../hooks/computer'
 import { Part, Unit } from '../machines/constants'
 import { usePlayer } from '../hooks/player'
+import { audio } from '../util/audio'
 
 interface Props {
   name: Part
@@ -42,13 +43,19 @@ const Buttons = ({ unit, part }: ButtonProps) => {
         className={cn('icon-plus border-r border-white', {
           'invisible pointer-events-none': hasCooldown
         })}
-        onClick={() => send({ type: 'SEND_UNIT', unit, part })}
+        onClick={() => {
+          audio.play('click')
+          send({ type: 'SEND_UNIT', unit, part })
+        }}
       />
       <Button
         className={cn('icon-minus', {
           'invisible pointer-events-none': hasCooldown
         })}
-        onClick={() => send({ type: 'RECALL_UNIT', unit, part })}
+        onClick={() => {
+          audio.play('click')
+          send({ type: 'RECALL_UNIT', unit, part })
+        }}
       />
     </div>
   )
@@ -70,7 +77,10 @@ const Interface = ({ name, description }: Props) => {
       <div className='flex justify-between items-center'>
         <h3 className='text-base'>{name}</h3>
         <button
-          onClick={() => send({ type: 'VIEW_MODULE', module: null })}
+          onClick={() => {
+            audio.play('click')
+            send({ type: 'VIEW_MODULE', module: null })
+          }}
           className='icon-x p-2'
         />
       </div>

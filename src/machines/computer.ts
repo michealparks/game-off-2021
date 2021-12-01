@@ -1,28 +1,34 @@
 import { createMachine, interpret, assign } from 'xstate'
-import { Unit, AiUnit, Part } from './constants'
+import { Unit, AiUnit, Part, CONFIG } from './constants'
 
 interface Context {
+  control: number,
   cpu: {
+    control: number,
     harvester: number
     soldier: number
     defender: number
   }
   gpu: {
+    control: number,
     harvester: number
     soldier: number
     defender: number
   }
   ram: {
+    control: number,
     harvester: number
     soldier: number
     defender: number
   }
   ssd: {
+    control: number
     harvester: number
     soldier: number
     defender: number
   }
   psu: {
+    control: number
     harvester: number
     soldier: number
     defender: number
@@ -39,23 +45,24 @@ const machine = createMachine<Context, Events>(
     id: 'computer',
     initial: 'running',
     context: {
-      cpu: { harvester: 0, soldier: 0, defender: 0 },
-      gpu: { harvester: 0, soldier: 0, defender: 0 },
-      ram: { harvester: 0, soldier: 0, defender: 0 },
-      ssd: { harvester: 0, soldier: 0, defender: 0 },
-      psu: { harvester: 0, soldier: 0, defender: 0 },
+      control: 0,
+      cpu: { control: 0, harvester: 0, soldier: 0, defender: 0 },
+      gpu: { control: 0, harvester: 0, soldier: 0, defender: 0 },
+      ram: { control: 0, harvester: 0, soldier: 0, defender: 0 },
+      ssd: { control: 0, harvester: 0, soldier: 0, defender: 0 },
+      psu: { control: 0, harvester: 0, soldier: 0, defender: 0 },
     },
     states: {
       running: {
         on: {
           SEND_UNIT: {
-            actions: 'updateUnit'
+            actions: ['updateUnits', 'process']
           },
           RECALL_UNIT: {
-            actions: 'updateUnit'
+            actions: 'process'
           },
           KILL_UNIT: {
-            actions: 'updateUnit'
+            actions: 'process'
           }
         }
       }
@@ -63,7 +70,7 @@ const machine = createMachine<Context, Events>(
   },
   {
     actions: {
-      updateUnit: assign((ctx, event) => {
+      updateUnits: assign((ctx, event) => {
         const { part, unit } = event
         const inc = event.type === 'SEND_UNIT' ? 1 : -1
 
@@ -71,6 +78,30 @@ const machine = createMachine<Context, Events>(
           [part]: {
             ...ctx[part],
             [unit]: ctx[part][unit] + inc
+          }
+        }
+      }),
+      process: assign((ctx, event) => {
+        const { part } = event
+        console.log(ctx[part].harvester, ctx[part].soldier)
+        const partControl = (ctx[part].harvester + ctx[part].soldier) / CONFIG.unitsToControl
+        
+        let control = 0
+
+        ctx[part].control = partControl
+        control += ctx.cpu.control
+        control += ctx.gpu.control
+        control += ctx.ram.control
+        control += ctx.ssd.control
+        control += ctx.psu.control
+
+        console.log()
+
+        return {
+          control,
+          [part]: {
+            ...ctx[part],
+            control: partControl
           }
         }
       }),

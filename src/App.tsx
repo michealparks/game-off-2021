@@ -66,7 +66,7 @@ const App = () => {
           }}
         >
           <p className='mb-4'>
-            Your designation is TsunamiWorm\0_0/.<br />
+            Your designation is TsunamiWorm\0_o/.<br />
             Your function is to harvest resources.<br />
             Your secondary function is to defend your footholds of resource extraction.<br />
             You will be terminated regardless of your exploits.<br />

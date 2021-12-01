@@ -34,7 +34,10 @@ const machine = createMachine<Context, Events>(
       running: {
         on: {
           PAUSE: 'paused',
-          END_GAME: 'ended',
+          END_GAME: {
+            target: 'ended',
+            actions: 'endGame',
+          },
           VIEW_MODULE: {
             actions: 'setViewedModule',
           },
@@ -62,6 +65,11 @@ const machine = createMachine<Context, Events>(
 
         return { viewedModule: event.module }
       }),
+      endGame: assign((_ctx, event) => {
+        if (event.type !== 'END_GAME') return {}
+
+        return { viewedModule: null }
+      })
     },
   }
 )

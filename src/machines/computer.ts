@@ -1,5 +1,6 @@
 import { createMachine, interpret, assign } from 'xstate'
 import { Unit, AiUnit, Part, CONFIG } from './constants'
+import { game } from './game'
 
 interface Context {
   control: number,
@@ -95,7 +96,9 @@ const machine = createMachine<Context, Events>(
         control += ctx.ssd.control
         control += ctx.psu.control
 
-        console.log()
+        if (control >= 1) {
+          game.send({ type: 'END_GAME' })
+        }
 
         return {
           control,

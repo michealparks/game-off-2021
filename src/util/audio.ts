@@ -30,6 +30,11 @@ export const play = (key: string, delay = 0) => {
   sound.play()
 }
 
+export const stop = (key: string) => {
+  const sound = sounds.get(key)!
+  sound.stop()
+}
+
 export const loop = (key: string) => {
   const sound = sounds.get(key)!
   sound.setLoop(true)
@@ -51,4 +56,4 @@ export const toggleLowPassFilter = (key: string, on: boolean) => {
   }
 }
 
-export const audio = { create, play, loop, volume, toggleLowPassFilter }
+export const audio = { create, play, stop, loop, volume, toggleLowPassFilter }

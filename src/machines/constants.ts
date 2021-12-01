@@ -4,7 +4,7 @@ export const CONFIG = {
   cooldown: 7,
   maxHarvester: 10,
   maxSoldier: 10,
-  ssdHarvesterBonus: 2,
+  ssdHarvesterBonus: 5,
   cpuHarvesterLimiter: 0.01,
   psuHarvesterLimiter: 0.05,
   unitsToControl: 20,
@@ -14,6 +14,8 @@ export const COST = {
   harvester: 5,
   soldier: 10
 }
+
+export const parts: Part[] = ['cpu', 'gpu', 'ram', 'ssd', 'psu']
 
 export type Unit = 'harvester' | 'soldier'
 export type AiUnit = 'defender'

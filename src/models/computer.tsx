@@ -11,17 +11,19 @@ useGLTF.preload(COMPUTER_URL)
 const Model = ({ ...props }: JSX.IntrinsicElements['group']) => {
   const { nodes, materials } = useGLTF(COMPUTER_URL) as GLTFResult
 
-  const meshes = [
-    nodes.motherboard,
-    nodes.io,
-    nodes.motherboard_gpu_io,
-    nodes.motherboard_cpu_io,
-    nodes.ram_io,
-  ]
-
   return (
     <group {...props} dispose={null}>
-      <Merged castShadow receiveShadow meshes={meshes}>
+      <Merged
+        castShadow
+        receiveShadow
+        meshes={[
+          nodes.motherboard,
+          nodes.io,
+          nodes.motherboard_gpu_io,
+          nodes.motherboard_cpu_io,
+          nodes.ram_io,
+        ]}
+      >
         {/* @ts-ignore */}
         {(Motherboard, IO, GpuIO, CpuIO, RamIO) => (
           <>

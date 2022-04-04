@@ -1,7 +1,5 @@
 module.exports = {
-  mode: 'jit',
-  purge: ['./index.html', './src/**/*.{ts,tsx}'],
-  darkMode: false, // or 'media' or 'class'
+  content: ['./index.html', './src/**/*.{ts,tsx}'],
   theme: {
     extend: {
       fontSize: {

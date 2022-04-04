@@ -1,14 +1,16 @@
 import './index.css'
 
 import { StrictMode, Suspense } from 'react'
-import ReactDOM from 'react-dom'
+import { createRoot } from 'react-dom/client'
 import App from './App'
 
-ReactDOM.render(
+const root = createRoot(document.getElementById('root')!)
+
+root.render(
   <StrictMode>
     <Suspense fallback={null}>
       <App />
     </Suspense>
   </StrictMode>,
-  document.getElementById('root')
+  
 )

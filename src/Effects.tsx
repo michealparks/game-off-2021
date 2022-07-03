@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react'
+import { useEffect } from 'react'
 import { useThree } from '@react-three/fiber'
 import { EffectComposer, Bloom, Noise, Vignette } from '@react-three/postprocessing'
 import { Glitch } from '@react-three/postprocessing'

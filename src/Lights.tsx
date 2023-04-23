@@ -1,20 +1,14 @@
 
-import { BakeShadows, softShadows, useDetectGPU } from '@react-three/drei'
-
-softShadows({
-  frustum: 1.75,
-  size: 0.005,
-  near: 2.5,
-  samples: 30,
-  rings: 11, // Rings (default: 11) must be a int
-})
+import { BakeShadows, SoftShadows, useDetectGPU } from '@react-three/drei'
 
 interface Props {
   bake: boolean
 }
 
 const Lights = ({ bake }: Props) => {
-  const mapsize = 1
+  SoftShadows({})
+
+  const mapsize = 2
 
   return (
     <>
@@ -24,6 +18,7 @@ const Lights = ({ bake }: Props) => {
         castShadow
         position={[1, 1, 1]}
         intensity={2}
+        shadow-bias={-0.001}
         shadow-mapSize-width={2048}
         shadow-mapSize-height={2048}
         shadow-camera-far={25}
@@ -38,6 +33,7 @@ const Lights = ({ bake }: Props) => {
         position={[-5, 10, 2]}
         angle={0.2}
         penumbra={1}
+        shadow-bias={-0.001}
         shadow-mapSize={[2048, 2048]}
         onUpdate={(self) => self.lookAt(0, 0, 0)}
       />

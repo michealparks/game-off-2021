@@ -1,8 +1,8 @@
 import { useEffect } from 'react'
 import { useThree } from '@react-three/fiber'
-import { EffectComposer, Bloom, Noise, Vignette } from '@react-three/postprocessing'
+import { EffectComposer, Bloom, Noise, Vignette, SMAA } from '@react-three/postprocessing'
 import { Glitch } from '@react-three/postprocessing'
-import { GlitchMode } from 'postprocessing'
+import { GlitchMode, SMAAPreset } from 'postprocessing'
 import { listener } from './util/audio'
 import { useComputer } from './hooks/computer'
 import { lerp } from 'three/src/math/MathUtils'
@@ -19,12 +19,12 @@ const Effects = () => {
   return (
     <EffectComposer multisampling={8}>
       <Bloom
-        intensity={0.7} // The bloom intensity.
+        intensity={1} // The bloom intensity.
         height={200} // render height
-        luminanceThreshold={0.4} // luminance threshold. Raise this value to mask out darker elements in the scene.
+        luminanceThreshold={0.45} // luminance threshold. Raise this value to mask out darker elements in the scene.
         luminanceSmoothing={0.9} // smoothness of the luminance threshold. Range is [0, 1]
       />
-      <Noise opacity={0.06} />
+      <Noise opacity={0.02} />
       <Vignette eskil={false} offset={0} darkness={1.3} />
       <Glitch
         delay={[lerp(4, 0.1, (control - 0.5) * 2), lerp(5, 0.2, (control - 0.5) * 2)]} // min and max glitch delay
@@ -34,6 +34,7 @@ const Effects = () => {
         active={control > 0.5} // turn on/off the effect (switches between "mode" prop and GlitchMode.DISABLED)
         ratio={0.85} // Threshold for strong glitches, 0 - no weak glitches, 1 - no strong glitches.
       />
+      
     </EffectComposer>
   )
 }

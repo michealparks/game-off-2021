@@ -5,11 +5,19 @@ import GPU from './gpu'
 import CPU from './cpu'
 import RAM from './ram'
 import SSD from './ssd'
+import { useInspector } from '../hooks/inspector'
 
 useGLTF.preload(COMPUTER_URL)
 
 const Model = ({ ...props }: JSX.IntrinsicElements['group']) => {
+  if (import.meta.env.DEV) {
+    // useInspector()
+  }
+
   const { nodes, materials } = useGLTF(COMPUTER_URL) as GLTFResult
+
+  materials.green.metalness = 0.5
+  materials.green.roughness = 0.1
 
   return (
     <group {...props} dispose={null}>

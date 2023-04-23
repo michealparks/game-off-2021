@@ -37,6 +37,7 @@ const RAM = () => {
 
   return (
     <a.group
+      name='ram'
       onClick={(e) => {
         e.stopPropagation()
         if (state.context.viewedModule !== null) audio.play('attach', 50)
@@ -50,7 +51,7 @@ const RAM = () => {
       <mesh castShadow receiveShadow geometry={nodes.Cube009.geometry} material={nodes.Cube009.material} />
       <mesh castShadow receiveShadow geometry={nodes.Cube009_1.geometry} material={nodes.Cube009_1.material} />
       <mesh castShadow geometry={nodes.Cube009_2.geometry} material={materials.red}>
-        <ramMaterial ref={matRef} attach='material' color='hotpink' />
+        <ramMaterial ref={matRef} attach='material' />
       </mesh>
       {active && <Interface name='ram' description={description} />}
     </a.group>

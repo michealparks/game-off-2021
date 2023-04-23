@@ -5,6 +5,7 @@ import { COMPUTER_URL, config, translateZ } from './constants'
 import Interface from './interface'
 import { GLTFResult } from './constants'
 import { audio } from '../util/audio'
+import { useReflection } from '../hooks/reflection'
 
 const description = `
 allows additional units to be built.
@@ -15,6 +16,14 @@ const SSD = () => {
   const active = state.context.viewedModule === 'ssd'
   const { nodes } = useGLTF(COMPUTER_URL) as GLTFResult
   const [{ z }] = useSpring({ z: active ? translateZ + 0.016 : 0.016, config }, [active])
+
+  const material = nodes.ssd.material as THREE.MeshStandardMaterial
+  const envMap = useReflection()
+
+  material.metalness = 0.9
+  material.roughness = 0.02
+  material.envMap = envMap
+  material.envMapIntensity = 0.3
 
   return (
     <a.mesh
